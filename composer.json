@@ -1,0 +1,21 @@
+{
+  "name": "fghazaleh/support",
+  "description": "Support Lib",
+  "type": "library",
+  "require-dev": {
+    "phpunit/phpunit": "~5.0"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ghazaleh",
+      "email": "franco.ghazaleh@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Asg\\": "src/"
+    }
+  },
+  "minimum-stability": "dev"
+}
