@@ -69,6 +69,8 @@ class NumberTest extends \PHPUnit_Framework_TestCase{
         $result = $c->ceil()->value();
         $this->assertEquals(5,$result);
 
+        $this->assertEquals(5,Number::make(4.2)->roundUp()->value());
+
         $c = Number::make(-3.3);
         $result = $c->ceil()->value();
         $this->assertEquals(-3,$result);
@@ -81,8 +83,29 @@ class NumberTest extends \PHPUnit_Framework_TestCase{
         $result = $c->floor()->value();
         $this->assertEquals(10,$result);
 
+        $this->assertEquals(10,Number::make(10.8)->roundDown()->value());
+
         $c = Number::make(-6.3);
         $result = $c->floor()->value();
         $this->assertEquals(-7,$result);
+    }
+    /**
+     * @test
+     * */
+    public function test_math_avg(){
+        $this->assertEquals(2,Number::make()->avg(1,2,3)->value());
+    }
+    /**
+     * @test
+     * */
+    public function test_math_sum(){
+        $this->assertEquals(6,Number::make()->sum(1,2,3)->value());
+    }
+    /**
+     * @test
+     * */
+    public function test_math_min_max(){
+        $this->assertEquals(-5,Number::make()->min(1,2,3,-5,-2.4)->value());
+        $this->assertEquals(80,Number::make()->max(80,1,2,3)->value());
     }
 }

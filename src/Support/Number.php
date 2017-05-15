@@ -27,7 +27,7 @@ class Number
      * @param mixed;
      * @return $this;
      * */
-    public static function make($value){
+    public static function make($value = 0){
         return new static($value);
     }
     /**
@@ -47,12 +47,27 @@ class Number
         return $this;
     }
     /**
+     * @Alias of ceil method, used to round fractions up
+     * @return $this;
+     * */
+    public function roundUp(){
+        return $this->ceil();
+    }
+
+    /**
      * Round fractions down
      * @return $this;
      * */
     public function floor(){
         $this->value = floor($this->value);
         return $this;
+    }
+    /**
+     * @Alias of floor method, used to round fractions down
+     * @return $this;
+     * */
+    public function roundDown(){
+        return $this->floor();
     }
     /**
      * Pow Exponential expression
@@ -63,7 +78,46 @@ class Number
         $this->value = pow($this->value,intval($exp));
         return $this;
     }
-
+    /**
+     * Average of args numbers;
+     * @param int ...args
+     * @return $this;
+     * */
+    public function avg(){
+        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+        $this->value = array_sum($numbers)/sizeof($numbers);
+        return $this;
+    }
+    /**
+     * Sum of args numbers
+     * @param int ...args
+     * @return $this;
+     * */
+    public function sum(){
+        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+        $this->value = array_sum($numbers);
+        return $this;
+    }
+    /**
+     * Minimum of args numbers
+     * @param int ...args
+     * @return $this;
+     * */
+    public function min(){
+        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+        $this->value = min($numbers);
+        return $this;
+    }
+    /**
+     * Maximum of args numbers
+     * @param int ...args
+     * @return $this;
+     * */
+    public function max(){
+        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+        $this->value = max($numbers);
+        return $this;
+    }
     /**
      * @return int|float|double|string;
      * */
