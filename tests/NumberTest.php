@@ -23,7 +23,8 @@ class NumberTest extends \PHPUnit_Framework_TestCase{
     public function convert_number_to_float_format(){
         $c = Number::make(12);
         $result = $c->toFloatFormat();
-        $this->assertEquals(12.00,$result);
+        $this->assertInternalType('string',$result);
+        $this->assertSame('12.00',$result);
     }
     /**
      * @test
@@ -52,43 +53,8 @@ class NumberTest extends \PHPUnit_Framework_TestCase{
         $this->assertInternalType('int',$result);
         $this->assertEquals(16,$result);
     }
-    /**
-     * @test
-     * */
-    public function test_math_abs(){
-        $c = Number::make(-4.3);
-        $result = $c->abs()->value();
-        $this->assertInternalType('float',$result);
-        $this->assertEquals(4.3,$result);
-    }
-    /**
-     * @test
-     * */
-    public function test_math_ceil(){
-        $c = Number::make(4.3);
-        $result = $c->ceil()->value();
-        $this->assertEquals(5,$result);
 
-        $this->assertEquals(5,Number::make(4.2)->roundUp()->value());
 
-        $c = Number::make(-3.3);
-        $result = $c->ceil()->value();
-        $this->assertEquals(-3,$result);
-    }
-    /**
-     * @test
-     * */
-    public function test_math_floor(){
-        $c = Number::make(10.3);
-        $result = $c->floor()->value();
-        $this->assertEquals(10,$result);
-
-        $this->assertEquals(10,Number::make(10.8)->roundDown()->value());
-
-        $c = Number::make(-6.3);
-        $result = $c->floor()->value();
-        $this->assertEquals(-7,$result);
-    }
     /**
      * @test
      * */

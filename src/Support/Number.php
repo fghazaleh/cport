@@ -30,51 +30,14 @@ class Number
     public static function make($value = 0){
         return new static($value);
     }
-    /**
-     * Absolute value
-     * @return $this;
-     * */
-    public function abs(){
-        $this->value = abs($this->value);
-        return $this;
-    }
-    /**
-     * Round fractions up
-     * @return $this;
-     * */
-    public function ceil(){
-        $this->value = ceil($this->value);
-        return $this;
-    }
-    /**
-     * @Alias of ceil method, used to round fractions up
-     * @return $this;
-     * */
-    public function roundUp(){
-        return $this->ceil();
-    }
 
-    /**
-     * Round fractions down
-     * @return $this;
-     * */
-    public function floor(){
-        $this->value = floor($this->value);
-        return $this;
-    }
-    /**
-     * @Alias of floor method, used to round fractions down
-     * @return $this;
-     * */
-    public function roundDown(){
-        return $this->floor();
-    }
+
     /**
      * Pow Exponential expression
      * @param int $exp;
      * @return $this;
      * */
-    public function pow($exp = 1){
+    public function pow(int $exp = 1){
         $this->value = pow($this->value,intval($exp));
         return $this;
     }
@@ -83,8 +46,8 @@ class Number
      * @param int ...args
      * @return $this;
      * */
-    public function avg(){
-        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+    public function avg(...$args){
+        $numbers = array_map([$this,'tryParseToInt'],$args);
         $this->value = array_sum($numbers)/sizeof($numbers);
         return $this;
     }
@@ -93,8 +56,8 @@ class Number
      * @param int ...args
      * @return $this;
      * */
-    public function sum(){
-        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+    public function sum(...$args){
+        $numbers = array_map([$this,'tryParseToInt'],$args);
         $this->value = array_sum($numbers);
         return $this;
     }
@@ -103,8 +66,8 @@ class Number
      * @param int ...args
      * @return $this;
      * */
-    public function min(){
-        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+    public function min(...$args){
+        $numbers = array_map([$this,'tryParseToInt'],$args);
         $this->value = min($numbers);
         return $this;
     }
@@ -113,8 +76,8 @@ class Number
      * @param int ...args
      * @return $this;
      * */
-    public function max(){
-        $numbers = array_map([$this,'tryParseToInt'],func_get_args());
+    public function max(...$args){
+        $numbers = array_map([$this,'tryParseToInt'],$args);
         $this->value = max($numbers);
         return $this;
     }
@@ -129,24 +92,24 @@ class Number
      * @param int $decimals;
      * @return float;
      * */
-    public function toFloat($decimals = 2){
-        return (float)number_format($this->value(),intval($decimals));
+    public function toFloat(int $decimals = 2):float{
+        return number_format($this->value(),$decimals);
     }
     /**
      * Used to convert number as float string.
      * @param int $decimals;
      * @return string;
      * */
-    public function toFloatFormat($decimals = 2){
-        return number_format($this->value(),intval($decimals));
+    public function toFloatFormat(int $decimals = 2):string {
+        return number_format($this->value(),$decimals);
     }
 
     /**
      * @param mixed $value;
      * @param int $defaultValue;
-     * @return int;
+     * @return mixed;
      * */
-    private function tryParseToInt($value,$defaultValue = 0){
+    private function tryParseToInt($value,int $defaultValue = 0){
         if ( is_numeric($value) ){
             return $value;
         }
