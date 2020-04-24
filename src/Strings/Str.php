@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace FG\Support\Strings;
 
-class Str
+use Exception;
+use FG\Support\Strings\Traits\Charable;
+use Traversable;
+
+class Str implements \IteratorAggregate
 {
+    use Charable;
+
     private $value = '';
 
     public function __construct(string $value = '')

@@ -21,6 +21,21 @@ class StrTest extends TestCase
     /**
      * @test
      */
+    public function testingTraversable()
+    {
+        $str = Str::fromString('Franco');
+
+        foreach ($str as $char)
+        {
+            $this->assertInstanceOf(Char::class, $char);
+        }
+
+        $this->assertSame('o', $char->toString());
+    }
+
+    /**
+     * @test
+     */
     public function testingSubString()
     {
         $str = new Str('Franco Ghazaleh');
