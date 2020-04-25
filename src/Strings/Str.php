@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace FG\Support\Strings;
 
-use Exception;
 use FG\Support\Strings\Traits\Charable;
-use Traversable;
 
 class Str implements \IteratorAggregate
 {
