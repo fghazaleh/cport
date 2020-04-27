@@ -25,6 +25,12 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
+    public function merge(array $items):self
+    {
+        $this->items = array_merge($this->items, $items);
+        return $this;
+    }
+
     public function slice(int $offset, int $length): self
     {
         $this->items = array_slice($this->items, $offset, $length);
