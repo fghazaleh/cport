@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Ghazaleh
- * Date: 5/13/17
- * Time: 6:40 PM
- */
 
 namespace Asg\Support;
-
 
 class Number
 {

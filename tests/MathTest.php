@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: abed
- * Date: 9/15/17
- * Time: 6:40 PM
- */
 
 use Asg\Support\Math;
 

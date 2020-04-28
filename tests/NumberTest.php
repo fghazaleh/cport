@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Ghazaleh
- * Date: 5/13/17
- * Time: 6:43 PM
- */
 
 use Asg\Support\Number;
 

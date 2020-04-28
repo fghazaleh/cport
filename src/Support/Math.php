@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: abed
- * Date: 9/15/17
- * Time: 6:37 PM
- */
 
 namespace Asg\Support;
 
