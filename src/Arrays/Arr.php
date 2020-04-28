@@ -6,6 +6,7 @@ namespace FG\Support\Arrays;
 
 class Arr implements \ArrayAccess, \Countable
 {
+    use Arrayable;
 
     private $items = [];
 
@@ -25,7 +26,7 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function merge(array $items):self
+    public function merge(array $items): self
     {
         $this->items = array_merge($this->items, $items);
         return $this;
@@ -59,12 +60,36 @@ class Arr implements \ArrayAccess, \Countable
         return new static($items);
     }
 
+    public function column($key): self
+    {
+        $this->items = array_column($this->items, $key);
+        return $this;
+    }
+
+    public function combine(array $array): self
+    {
+        $this->items = array_combine($this->items,$array);
+        return $this;
+    }
+
+    /**
+     * Gets the first element after applying the filter
+     *
+     * @param callable $where
+     * @return mixed
+     */
     public function first(callable $where)
     {
         $items = $this->where($where)->all();
         return array_shift($items);
     }
 
+    /**
+     * Gets the last element after applying the filter
+     *
+     * @param callable $where
+     * @return mixed
+     */
     public function last(callable $where)
     {
         $items = $this->where($where)->all();
@@ -81,26 +106,5 @@ class Arr implements \ArrayAccess, \Countable
         return count($this->all());
     }
 
-    public function offsetExists($offset)
-    {
-        return isset($this->items[$offset]);
-    }
 
-    public function offsetGet($offset)
-    {
-        return $this->offsetExists($offset) ? $this->items[$offset] : null;
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        $this->items[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        if (!$this->offsetExists($offset)) {
-            return;
-        }
-        unset($this->items[$offset]);
-    }
 }

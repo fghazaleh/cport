@@ -76,7 +76,7 @@ class ArrTest extends TestCase
     {
         $arr = new Arr([1, 2, 3]);
         $result = [];
-        $arr->each(function ($item) use (&$result){
+        $arr->each(function ($item) use (&$result) {
             if ($item == 2) {
                 return false;
             }
@@ -91,7 +91,7 @@ class ArrTest extends TestCase
     public function testingArrWhere()
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
-        $result = $arr->where(function ($item){
+        $result = $arr->where(function ($item) {
             return $item % 2 === 0;
         })->all();
 
@@ -104,7 +104,7 @@ class ArrTest extends TestCase
     public function testingArrFirst()
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
-        $result = $arr->first(function ($item){
+        $result = $arr->first(function ($item) {
             return $item % 2 === 0;
         });
 
@@ -117,7 +117,7 @@ class ArrTest extends TestCase
     public function testingArrLast()
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
-        $result = $arr->last(function ($item){
+        $result = $arr->last(function ($item) {
             return $item % 2 !== 0;
         });
 
@@ -132,5 +132,40 @@ class ArrTest extends TestCase
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
 
         $this->assertSame(6, $arr->count());
+    }
+
+    /**
+     * @test
+     */
+    public function testingColumn()
+    {
+        $array = [
+            [
+                'id' => 5698,
+                'first_name' => 'Peter',
+                'last_name' => 'Griffin',
+            ],
+            [
+                'id' => 4767,
+                'first_name' => 'Ben',
+                'last_name' => 'Smith',
+            ]
+        ];
+        $arr = new Arr($array);
+
+        $arr->column('last_name');
+        $this->assertSame([0 => 'Griffin', 1 => 'Smith'], $arr->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingCombine()
+    {
+        $age = [22, 43, 52];
+        $arr = new Arr(['Peter', 'Ben', 'Joe']);
+
+        $arr->combine($age);
+        $this->assertSame(['Peter' => 22, 'Ben' => 43, 'Joe' => 52], $arr->all());
     }
 }
