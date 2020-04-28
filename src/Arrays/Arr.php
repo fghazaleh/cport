@@ -76,6 +76,11 @@ class Arr implements \ArrayAccess, \Countable
         return $this->items;
     }
 
+    public function count()
+    {
+        return count($this->all());
+    }
+
     public function offsetExists($offset)
     {
         return isset($this->items[$offset]);
@@ -97,10 +102,5 @@ class Arr implements \ArrayAccess, \Countable
             return;
         }
         unset($this->items[$offset]);
-    }
-
-    public function count()
-    {
-        return count($this->all());
     }
 }
