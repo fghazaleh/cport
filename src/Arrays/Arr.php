@@ -6,6 +6,10 @@ namespace FG\Support\Arrays;
 
 class Arr implements \ArrayAccess, \Countable
 {
+    const SORT_ASC = 'ASC';
+    const SORT_DESC = 'DESC';
+    const SORT_NAT = 'NAT';
+
     use Arrayable;
 
     private $items = [];
@@ -69,6 +73,40 @@ class Arr implements \ArrayAccess, \Countable
     public function combine(array $array): self
     {
         $this->items = array_combine($this->items,$array);
+        return $this;
+    }
+
+    /**
+     * ASC : Sorting by ascending.
+     * DESC : Sorting by descending.
+     * NAT : Sorting by natural algorithm.
+     *
+     *
+     * @param string $type 'ASC' or 'DESC', 'NAT'
+     * @return Arr
+     */
+    public function sort(string $type = Arr::SORT_ASC):self
+    {
+        $items = $this->items;
+        switch ($type) {
+            case Arr::SORT_DESC:
+                arsort($items);
+                break;
+            case Arr::SORT_NAT:
+                natsort($items);
+                break;
+            default;
+                asort($items);
+        }
+        $this->items = $items;
+        return $this;
+    }
+
+    public function whereSort(callable $where):self
+    {
+        $items = $this->items;
+        uasort($items, $where);
+        $this->items = $items;
         return $this;
     }
 

@@ -168,4 +168,36 @@ class ArrTest extends TestCase
         $arr->combine($age);
         $this->assertSame(['Peter' => 22, 'Ben' => 43, 'Joe' => 52], $arr->all());
     }
+
+    /**
+     * @test
+     */
+    public function testingArrSorting()
+    {
+        $arr = new Arr(['Peter' => 43, 'Ben' => 32, 'Joe' => 52]);
+        $arr->sort();
+        $this->assertSame(['Ben' => 32, 'Peter' => 43, 'Joe' => 52], $arr->all());
+
+        $arr->sort(Arr::SORT_DESC);
+        $this->assertSame(['Joe' => 52, 'Peter' => 43, 'Ben' => 32], $arr->all());
+
+        $arr = new Arr(['temp2.txt', 'temp10.txt', 'temp1.txt']);
+
+        $arr->sort(Arr::SORT_NAT);
+        $this->assertSame([2 => 'temp1.txt', 0 => 'temp2.txt', 1 => 'temp10.txt'], $arr->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingArrWhereSort()
+    {
+        $arr = Arr::createFrom(['a' => 4, 'b' => 2, 'c' => 8, 'd' => 6]);
+
+        $arr->whereSort(function ($item1 , $item2){
+            return ($item1<$item2)?-1:1;
+        });
+
+        $this->assertSame(['b' => 2, 'a' => 4, 'd' => 6, 'c' => 8], $arr->all());
+    }
 }
