@@ -95,7 +95,7 @@ class ArrTest extends TestCase
             return $item % 2 === 0;
         })->all();
 
-        $this->assertSame([2, 4, 6], $result);
+        $this->assertEquals([1 => 2, 3 => 4, 5 => 6], $result);
     }
 
     /**
@@ -199,5 +199,28 @@ class ArrTest extends TestCase
         });
 
         $this->assertSame(['b' => 2, 'a' => 4, 'd' => 6, 'c' => 8], $arr->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingKeys()
+    {
+        $arr = Arr::createFrom(['a' => 4, 'b' => 2, 'c' => 8, 'd' => 6]);
+
+        $keys = $arr->keys();
+
+        $this->assertSame(['a', 'b', 'c', 'd'], $keys->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingKeyExists()
+    {
+        $arr = Arr::createFrom(['key1' => 'Franco', 'key3' => 'Foo']);
+
+        $this->assertTrue($arr->keyExists('key1'));
+        $this->assertFalse($arr->keyExists('key2'));
     }
 }

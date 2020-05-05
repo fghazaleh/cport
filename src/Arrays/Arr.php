@@ -110,6 +110,16 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
+    public function keys():self
+    {
+        return new static(array_keys($this->items));
+    }
+
+    public function keyExists($key): bool
+    {
+        return array_key_exists($key, $this->items);
+    }
+
     /**
      * Gets the first element after applying the filter
      *
