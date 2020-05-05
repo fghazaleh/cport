@@ -1,2 +1,2 @@
 # support
-PHP Library - Support (Number)
+PHP Library - Support (Array, String, Number)
