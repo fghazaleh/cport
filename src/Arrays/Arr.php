@@ -32,14 +32,16 @@ class Arr implements \ArrayAccess, \Countable
 
     public function merge(array $items): self
     {
-        $this->items = array_merge($this->items, $items);
-        return $this;
+        return new static(
+            array_merge($this->items, $items)
+        );
     }
 
     public function slice(int $offset, int $length): self
     {
-        $this->items = array_slice($this->items, $offset, $length);
-        return $this;
+        return new static(
+            array_slice($this->items, $offset, $length)
+        );
     }
 
     public function map(callable $callable): self
@@ -66,14 +68,30 @@ class Arr implements \ArrayAccess, \Countable
 
     public function column($key): self
     {
-        $this->items = array_column($this->items, $key);
-        return $this;
+        return new static(
+            array_column($this->items, $key)
+        );
     }
 
     public function combine(array $array): self
     {
-        $this->items = array_combine($this->items,$array);
-        return $this;
+        return new static(
+            array_combine($this->items, $array)
+        );
+    }
+
+    public function diff(array $array): self
+    {
+        return new static(
+            array_diff($this->items, $array)
+        );
+    }
+
+    public function flip(): self
+    {
+        return new static(
+            array_flip($this->items)
+        );
     }
 
     /**
@@ -85,7 +103,7 @@ class Arr implements \ArrayAccess, \Countable
      * @param string $type 'ASC' or 'DESC', 'NAT'
      * @return Arr
      */
-    public function sort(string $type = Arr::SORT_ASC):self
+    public function sort(string $type = Arr::SORT_ASC): self
     {
         $items = $this->items;
         switch ($type) {
@@ -102,7 +120,7 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function whereSort(callable $where):self
+    public function whereSort(callable $where): self
     {
         $items = $this->items;
         uasort($items, $where);
@@ -110,7 +128,7 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function keys():self
+    public function keys(): self
     {
         return new static(array_keys($this->items));
     }
@@ -153,6 +171,4 @@ class Arr implements \ArrayAccess, \Countable
     {
         return count($this->all());
     }
-
-
 }

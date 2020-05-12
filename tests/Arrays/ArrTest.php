@@ -53,7 +53,7 @@ class ArrTest extends TestCase
     public function testingMergeArrays()
     {
         $arr = new Arr([1, 2]);
-        $arr->merge([3, 4]);
+        $arr = $arr->merge([3, 4]);
         $this->assertSame([1, 2, 3, 4], $arr->all());
     }
 
@@ -153,7 +153,7 @@ class ArrTest extends TestCase
         ];
         $arr = new Arr($array);
 
-        $arr->column('last_name');
+        $arr = $arr->column('last_name');
         $this->assertSame([0 => 'Griffin', 1 => 'Smith'], $arr->all());
     }
 
@@ -165,7 +165,7 @@ class ArrTest extends TestCase
         $age = [22, 43, 52];
         $arr = new Arr(['Peter', 'Ben', 'Joe']);
 
-        $arr->combine($age);
+        $arr = $arr->combine($age);
         $this->assertSame(['Peter' => 22, 'Ben' => 43, 'Joe' => 52], $arr->all());
     }
 
@@ -194,8 +194,8 @@ class ArrTest extends TestCase
     {
         $arr = Arr::createFrom(['a' => 4, 'b' => 2, 'c' => 8, 'd' => 6]);
 
-        $arr->whereSort(function ($item1 , $item2){
-            return ($item1<$item2)?-1:1;
+        $arr->whereSort(function ($item1, $item2) {
+            return ($item1 < $item2) ? -1 : 1;
         });
 
         $this->assertSame(['b' => 2, 'a' => 4, 'd' => 6, 'c' => 8], $arr->all());
@@ -222,5 +222,28 @@ class ArrTest extends TestCase
 
         $this->assertTrue($arr->keyExists('key1'));
         $this->assertFalse($arr->keyExists('key2'));
+    }
+
+    /**
+     * @test
+     */
+    public function testingArrDiff()
+    {
+        $arr = new Arr(['a' => 'red', 'b' => 'green', 'c' => 'blue', 'd' => 'yellow']);
+        $arr = $arr->diff(['e' => 'red', 'f' => 'green', 'g' => 'blue']);
+
+        $this->assertSame(['d' => 'yellow'], $arr->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingArrFlip()
+    {
+        $arr = new Arr(['a' => 'red', 'b' => 'green']);
+        $this->assertSame([
+            'red' => 'a',
+            'green' => 'b'
+        ], $arr->flip()->all());
     }
 }
