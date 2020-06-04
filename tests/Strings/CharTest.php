@@ -18,4 +18,14 @@ class CharTest extends TestCase
         $this->assertInstanceOf(Char::class, $char);
         $this->assertSame('Z', $char->toString());
     }
+
+    /**
+     * @test
+     */
+    public function testingToHexMethod()
+    {
+        $char = new Char('a');
+
+        $this->assertSame('61', $char->toHex());
+    }
 }

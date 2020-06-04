@@ -84,6 +84,16 @@ class StrTest extends TestCase
     /**
      * @test
      */
+    public function testingStringLowerCaseFirst()
+    {
+        $str = new Str('Hello World');
+
+        $this->assertSame('hello World',$str->toLowerFirst()->toString());
+    }
+
+    /**
+     * @test
+     */
     public function testingStringReplace()
     {
         $str = new Str('Franco Ghazaleh');
@@ -181,5 +191,15 @@ class StrTest extends TestCase
 
         $this->assertSame('Franco Ghazaleh', $str->stripTags()->toString());
         $this->assertSame('<b>Franco Ghazaleh</b>', $str->stripTags('<b>')->toString());
+    }
+
+    /**
+     * @test
+     */
+    public function testingStringMd5()
+    {
+        $str = new Str('Franco');
+
+        $this->assertSame('99d2470a3073b4a570031f75896c6ac6', $str->toMd5());
     }
 }

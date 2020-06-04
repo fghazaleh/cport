@@ -31,7 +31,17 @@ class Char
         return ord($this->char);
     }
 
-    public static function fromCode(int $byteValue):Char
+    /**
+     * Converts a string of ASCII characters to hexadecimal values
+     *
+     * @return string
+     */
+    public function toHex(): string
+    {
+        return bin2hex($this->char);
+    }
+
+    public static function fromCode(int $byteValue): Char
     {
         return new Char(chr($byteValue));
     }

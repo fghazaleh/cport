@@ -17,7 +17,7 @@ class Str implements \IteratorAggregate
         $this->value = $value;
     }
 
-    public static function fromString(string $value):self
+    public static function fromString(string $value): self
     {
         return new static($value);
     }
@@ -72,6 +72,13 @@ class Str implements \IteratorAggregate
         );
     }
 
+    public function toLowerFirst(): self
+    {
+        return new static(
+            lcfirst($this->value)
+        );
+    }
+
     public function replace(string $search, string $replace): self
     {
         return new static(
@@ -114,6 +121,11 @@ class Str implements \IteratorAggregate
     }
 
     /* ----------- */
+
+    public function toMd5(): string
+    {
+        return md5($this->value);
+    }
 
     public function startsWith(string $value): bool
     {
