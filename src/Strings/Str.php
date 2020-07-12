@@ -17,7 +17,7 @@ class Str implements \IteratorAggregate
         $this->value = $value;
     }
 
-    public static function fromString(string $value): self
+    public static function fromString(string $value): Str
     {
         return new static($value);
     }
@@ -32,14 +32,14 @@ class Str implements \IteratorAggregate
         return $this->toString();
     }
 
-    public function trim($char = ' '): self
+    public function trim($char = ' '): Str
     {
         return new static(
             trim($this->value, $char)
         );
     }
 
-    public function rtrim($char = ' '): self
+    public function rtrim($char = ' '): Str
     {
         return new static(
             rtrim($this->value, $char)
@@ -58,35 +58,47 @@ class Str implements \IteratorAggregate
         return strlen($this->value);
     }
 
-    public function toUpper(): self
+    public function toUpper(): Str
     {
         return new static(
             strtoupper($this->value)
         );
     }
 
-    public function toLower(): self
+    public function toLower(): Str
     {
         return new static(
             strtolower($this->value)
         );
     }
 
-    public function toLowerFirst(): self
+    public function toLowerFirst(): Str
     {
         return new static(
             lcfirst($this->value)
         );
     }
 
-    public function replace(string $search, string $replace): self
+    public function toUpperFirst(): Str
+    {
+        return new static(
+            ucwords($this->value)
+        );
+    }
+
+    /**
+     * @param array|string $search
+     * @param array|string $replace
+     * @return Str
+     */
+    public function replace($search, $replace): Str
     {
         return new static(
             str_replace($search, $replace, $this->value)
         );
     }
 
-    public function subString(int $start, ?int $length = null): self
+    public function subString(int $start, ?int $length = null): Str
     {
         if ($length === null) {
             return new static(
@@ -98,26 +110,49 @@ class Str implements \IteratorAggregate
         );
     }
 
-    public function appendAfter(string $value): self
+    public function appendAfter(string $value): Str
     {
         return new static($this->value . $value);
     }
 
-    public function appendBefore(string $value): self
+    public function appendBefore(string $value): Str
     {
         return new static($value . $this->value);
     }
 
-    public function stripTags($allows = null): self
+    public function stripTags($allows = null): Str
     {
         return new static(strip_tags($this->value, $allows));
     }
 
-    public function reverse(): self
+    public function reverse(): Str
     {
         return new static(
             strrev($this->value)
         );
+    }
+
+    /**
+     * Convert a value to camel case.
+     *
+     * @return Str
+     */
+    public function camel(): Str
+    {
+        return $this->studly()->toLowerFirst();
+    }
+
+    /**
+     * Convert a value to studly caps case.
+     *
+     * @return Str
+     */
+    public function studly(): Str
+    {
+        return $this->replace(['-','_'],' ')
+            ->toUpperFirst()
+            ->replace(' ','')
+            ;
     }
 
     /* ----------- */

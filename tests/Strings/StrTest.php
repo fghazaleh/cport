@@ -94,6 +94,16 @@ class StrTest extends TestCase
     /**
      * @test
      */
+    public function testingStringUpperCaseFirst()
+    {
+        $str = new Str('hello world');
+
+        $this->assertSame('Hello World',$str->toUpperFirst()->toString());
+    }
+
+    /**
+     * @test
+     */
     public function testingStringReplace()
     {
         $str = new Str('Franco Ghazaleh');
@@ -101,6 +111,30 @@ class StrTest extends TestCase
         $result = $str->replace('Gh','3h');
 
         $this->assertSame('Franco 3hazaleh',$result->toString());
+    }
+
+    /**
+     * @test
+     */
+    public function testingStringStudly()
+    {
+        $str = new Str('build_email_list');
+
+        $result = $str->studly();
+
+        $this->assertSame('BuildEmailList',$result->toString());
+    }
+
+    /**
+     * @test
+     */
+    public function testingStringCamel()
+    {
+        $str = new Str('build_email_list');
+
+        $result = $str->camel();
+
+        $this->assertSame('buildEmailList',$result->toString());
     }
 
     /**

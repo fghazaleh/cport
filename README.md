@@ -14,7 +14,7 @@ Build-in methods in `Str` class.
 
 - trim, rtrim, ltrim
 - length
-- toUpper, toLower, toLowerFirst
+- toUpper, toLower, toUpperFirst, toLowerFirst
 - replace
 - subString
 - appendAfter, appendBefore
