@@ -162,6 +162,19 @@ class Arr implements \ArrayAccess, \Countable
         return array_pop($items);
     }
 
+    /**
+     * @param string|null $key
+     * @return int|float
+     */
+    public function sum(string $key = null)
+    {
+        $items = $this->all();
+        if ($key !== null ){
+            $items = $this->column($key)->all();
+        }
+        return array_sum($items);
+    }
+
     public function all(): array
     {
         return $this->items;

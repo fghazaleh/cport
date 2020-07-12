@@ -246,4 +246,18 @@ class ArrTest extends TestCase
             'green' => 'b'
         ], $arr->flip()->all());
     }
+
+    /**
+     * @test
+     */
+    public function testingArrSum()
+    {
+        $arr1 = new Arr([1, 2 , 3]);
+        $arr2 = new Arr([
+            ['name' => 'name 1', 'salary' => 22],
+            ['name' => 'name 2', 'salary' => 44],
+        ]);
+        $this->assertSame(6, $arr1->sum());
+        $this->assertSame(66, $arr2->sum('salary'));
+    }
 }

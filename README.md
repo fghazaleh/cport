@@ -52,3 +52,4 @@ Build-in methods in `Arr` class.
 - keys, keyExists
 - first, last
 - all, count
+- sum
