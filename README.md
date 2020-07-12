@@ -24,7 +24,7 @@ Build-in methods in `Str` class.
 - startsWith, endsWith
 - indexOf
 - lastIndexOf
-- chartAt, chartCodeAt
+- charAt, charCodeAt
 - camel, studly
 
 ```php

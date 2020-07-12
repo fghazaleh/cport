@@ -163,19 +163,19 @@ class StrTest extends TestCase
     /**
      * @test
      */
-    public function testingChartAt()
+    public function testingCharAt()
     {
         $str = new Str('Franco Ghazaleh');
-        $this->assertSame('o',$str->chartAt(5)->toString());
+        $this->assertSame('o',$str->charAt(5)->toString());
     }
 
     /**
      * @test
      */
-    public function testingChartCodeAt()
+    public function testingCharCodeAt()
     {
         $str = new Str('Franco Ghazaleh');
-        $this->assertSame(99,$str->chartCodeAt(4));
+        $this->assertSame(99,$str->charCodeAt(4));
     }
 
     /**

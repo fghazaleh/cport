@@ -155,8 +155,6 @@ class Str implements \IteratorAggregate
             ;
     }
 
-    /* ----------- */
-
     public function toMd5(): string
     {
         return md5($this->value);
@@ -192,7 +190,7 @@ class Str implements \IteratorAggregate
         return $pos;
     }
 
-    public function chartAt(int $index): Char
+    public function charAt(int $index): Char
     {
         return new Char(
             $this
@@ -201,8 +199,8 @@ class Str implements \IteratorAggregate
         );
     }
 
-    public function chartCodeAt(int $index): int
+    public function charCodeAt(int $index): int
     {
-        return $this->chartAt($index)->code();
+        return $this->charAt($index)->code();
     }
 }

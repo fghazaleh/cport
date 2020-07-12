@@ -13,7 +13,7 @@ trait Charable
     {
         for($i = 0; $i < $this->length(); $i++)
         {
-            yield $this->chartAt($i);
+            yield $this->charAt($i);
         }
     }
 }
