@@ -1,6 +1,6 @@
 {
-  "name": "fghazaleh/support",
-  "description": "Support Lib",
+  "name": "fghazaleh/cport",
+  "description": "PHP support library for Array and String PHP function",
   "type": "library",
   "require":{
     "php": ">=7.2.0"
