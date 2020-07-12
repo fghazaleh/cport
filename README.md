@@ -25,6 +25,7 @@ Build-in methods in `Str` class.
 - indexOf
 - lastIndexOf
 - chartAt, chartCodeAt
+- camel, studly
 
 ```php
 $array = [1, 2, 3, 4];
