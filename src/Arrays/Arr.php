@@ -19,38 +19,38 @@ class Arr implements \ArrayAccess, \Countable
         $this->items = $items;
     }
 
-    public static function createFrom(array $items): self
+    public static function createFrom(array $items): Arr
     {
         return new static($items);
     }
 
-    public function add($item): self
+    public function add($item): Arr
     {
         array_push($this->items, $item);
         return $this;
     }
 
-    public function merge(array $items): self
+    public function merge(array $items): Arr
     {
         return new static(
             array_merge($this->items, $items)
         );
     }
 
-    public function slice(int $offset, int $length): self
+    public function slice(int $offset, int $length): Arr
     {
         return new static(
             array_slice($this->items, $offset, $length)
         );
     }
 
-    public function map(callable $callable): self
+    public function map(callable $callable): Arr
     {
         $this->items = array_map($callable, $this->items);
         return $this;
     }
 
-    public function each(callable $callback): self
+    public function each(callable $callback): Arr
     {
         foreach ($this->items as $key => $item) {
             if ($callback($item, $key) === false) {
@@ -60,34 +60,34 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function where(callable $where): self
+    public function where(callable $where): Arr
     {
         $items = array_filter($this->items, $where);
         return new static($items);
     }
 
-    public function column($key): self
+    public function column($key): Arr
     {
         return new static(
             array_column($this->items, $key)
         );
     }
 
-    public function combine(array $array): self
+    public function combine(array $array): Arr
     {
         return new static(
             array_combine($this->items, $array)
         );
     }
 
-    public function diff(array $array): self
+    public function diff(array $array): Arr
     {
         return new static(
             array_diff($this->items, $array)
         );
     }
 
-    public function flip(): self
+    public function flip(): Arr
     {
         return new static(
             array_flip($this->items)
@@ -103,7 +103,7 @@ class Arr implements \ArrayAccess, \Countable
      * @param string $type 'ASC' or 'DESC', 'NAT'
      * @return Arr
      */
-    public function sort(string $type = Arr::SORT_ASC): self
+    public function sort(string $type = Arr::SORT_ASC): Arr
     {
         $items = $this->items;
         switch ($type) {
@@ -120,7 +120,7 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function whereSort(callable $where): self
+    public function whereSort(callable $where): Arr
     {
         $items = $this->items;
         uasort($items, $where);
@@ -128,9 +128,20 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function keys(): self
+    public function keys(): Arr
     {
         return new static(array_keys($this->items));
+    }
+
+    public function chunk(int $size = 1): Arr
+    {
+        if ($size < 0){
+            $size = 1;
+        }
+
+        return new static(
+            array_chunk($this->items, $size)
+        );
     }
 
     public function keyExists($key): bool
