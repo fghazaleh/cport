@@ -24,6 +24,13 @@ class Arr implements \ArrayAccess, \Countable
         return new static($items);
     }
 
+    public static function fill($value, int $size, int $startIndex = 0): Arr
+    {
+        return new static(
+            array_fill($startIndex, $size, $value)
+        );
+    }
+
     public function add($item): Arr
     {
         array_push($this->items, $item);
@@ -144,6 +151,13 @@ class Arr implements \ArrayAccess, \Countable
         );
     }
 
+    public function pad(int $padSize, $value):Arr
+    {
+        return new static(
+            array_pad($this->items, $padSize, $value)
+        );
+    }
+
     public function keyExists($key): bool
     {
         return array_key_exists($key, $this->items);
@@ -184,6 +198,18 @@ class Arr implements \ArrayAccess, \Countable
             $items = $this->column($key)->all();
         }
         return array_sum($items);
+    }
+
+    /**
+     * Returns random array keys
+     *
+     * @param int $size
+     *
+     * @return array|mixed
+     */
+    public function rand(int $size = 1)
+    {
+        return array_rand($this->all(), $size);
     }
 
     public function all(): array

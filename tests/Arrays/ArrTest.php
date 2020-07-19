@@ -276,4 +276,38 @@ class ArrTest extends TestCase
             ['Mercedes', 'Opel'],
         ], $result->all());
     }
+
+    /**
+     * @test
+     */
+    public function testingArrPad()
+    {
+        $arr = new Arr([12, 10, 9]);
+
+        $result = $arr->pad(6, 0);
+        $this->assertCount(6, $result);
+        $this->assertSame([12, 10, 9, 0, 0, 0], $result->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingArrFill()
+    {
+        $arr = Arr::fill('franco', 4);
+
+        $this->assertCount(4, $arr);
+        $this->assertSame(['franco', 'franco', 'franco', 'franco'], $arr->all());
+    }
+
+    /**
+     * @test
+     */
+    public function testingArrRand()
+    {
+        $arr = Arr::createFrom([12, 10, 9, 4, 5]);
+
+        $result = $arr->rand(2);
+        $this->assertCount(2, $result);
+    }
 }
