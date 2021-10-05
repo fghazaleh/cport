@@ -149,15 +149,14 @@ class Str implements \IteratorAggregate
      */
     public function studly(): Str
     {
-        return $this->replace(['-','_'],' ')
+        return $this->replace(['-', '_'], ' ')
             ->toUpperFirst()
-            ->replace(' ','')
-            ;
+            ->replace(' ', '');
     }
 
-    public function toMd5(): string
+    public function toMd5(string $salt = ''): string
     {
-        return md5($this->value);
+        return md5($this->value.$salt);
     }
 
     public function startsWith(string $value): bool

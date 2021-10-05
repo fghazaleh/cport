@@ -15,7 +15,7 @@ class StrTest extends TestCase
     {
         $str = Str::fromString('Franco Ghazaleh');
 
-        $this->assertInstanceOf(Str::class,$str);
+        $this->assertInstanceOf(Str::class, $str);
     }
 
     /**
@@ -25,8 +25,7 @@ class StrTest extends TestCase
     {
         $str = Str::fromString('Franco');
 
-        foreach ($str as $char)
-        {
+        foreach ($str as $char) {
             $this->assertInstanceOf(Char::class, $char);
         }
 
@@ -42,7 +41,7 @@ class StrTest extends TestCase
 
         $result = $str->subString(4)->toString();
 
-        $this->assertSame('co Ghazaleh',$result);
+        $this->assertSame('co Ghazaleh', $result);
     }
 
     /**
@@ -51,13 +50,13 @@ class StrTest extends TestCase
     public function testingTrim()
     {
         $str = new Str('  Franco  ');
-        $this->assertSame('Franco',(string)$str->trim());
+        $this->assertSame('Franco', (string)$str->trim());
 
         $str = new Str(' Franco ');
-        $this->assertSame(' Franco',(string)$str->rtrim());
+        $this->assertSame(' Franco', (string)$str->rtrim());
 
         $str = new Str(' Franco ');
-        $this->assertSame('Franco ',(string)$str->ltrim());
+        $this->assertSame('Franco ', (string)$str->ltrim());
     }
 
     /**
@@ -67,7 +66,7 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco Ghazaleh');
 
-        $this->assertSame(15,$str->length());
+        $this->assertSame(15, $str->length());
     }
 
     /**
@@ -77,8 +76,8 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco');
 
-        $this->assertSame('FRANCO',$str->toUpper()->toString());
-        $this->assertSame('franco',$str->toLower()->toString());
+        $this->assertSame('FRANCO', $str->toUpper()->toString());
+        $this->assertSame('franco', $str->toLower()->toString());
     }
 
     /**
@@ -88,7 +87,7 @@ class StrTest extends TestCase
     {
         $str = new Str('Hello World');
 
-        $this->assertSame('hello World',$str->toLowerFirst()->toString());
+        $this->assertSame('hello World', $str->toLowerFirst()->toString());
     }
 
     /**
@@ -98,7 +97,7 @@ class StrTest extends TestCase
     {
         $str = new Str('hello world');
 
-        $this->assertSame('Hello World',$str->toUpperFirst()->toString());
+        $this->assertSame('Hello World', $str->toUpperFirst()->toString());
     }
 
     /**
@@ -108,9 +107,9 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco Ghazaleh');
 
-        $result = $str->replace('Gh','3h');
+        $result = $str->replace('Gh', '3h');
 
-        $this->assertSame('Franco 3hazaleh',$result->toString());
+        $this->assertSame('Franco 3hazaleh', $result->toString());
     }
 
     /**
@@ -122,7 +121,7 @@ class StrTest extends TestCase
 
         $result = $str->studly();
 
-        $this->assertSame('BuildEmailList',$result->toString());
+        $this->assertSame('BuildEmailList', $result->toString());
     }
 
     /**
@@ -134,7 +133,7 @@ class StrTest extends TestCase
 
         $result = $str->camel();
 
-        $this->assertSame('buildEmailList',$result->toString());
+        $this->assertSame('buildEmailList', $result->toString());
     }
 
     /**
@@ -144,9 +143,9 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco');
 
-        $this->assertSame('Franco Ghazaleh',$str->appendAfter(' Ghazaleh')->toString());
+        $this->assertSame('Franco Ghazaleh', $str->appendAfter(' Ghazaleh')->toString());
 
-        $this->assertSame('Awesome Franco',$str->appendBefore('Awesome ')->toString());
+        $this->assertSame('Awesome Franco', $str->appendBefore('Awesome ')->toString());
     }
 
     /**
@@ -156,7 +155,7 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco');
 
-        $this->assertSame('ocnarF',$str->reverse()->toString());
+        $this->assertSame('ocnarF', $str->reverse()->toString());
 
     }
 
@@ -166,7 +165,7 @@ class StrTest extends TestCase
     public function testingCharAt()
     {
         $str = new Str('Franco Ghazaleh');
-        $this->assertSame('o',$str->charAt(5)->toString());
+        $this->assertSame('o', $str->charAt(5)->toString());
     }
 
     /**
@@ -175,7 +174,7 @@ class StrTest extends TestCase
     public function testingCharCodeAt()
     {
         $str = new Str('Franco Ghazaleh');
-        $this->assertSame(99,$str->charCodeAt(4));
+        $this->assertSame(99, $str->charCodeAt(4));
     }
 
     /**
@@ -185,9 +184,9 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco Ghazaleh');
 
-        $this->assertSame(7,$str->indexOf('G'));
+        $this->assertSame(7, $str->indexOf('G'));
 
-        $this->assertSame(-1,$str->indexOf('GG'));
+        $this->assertSame(-1, $str->indexOf('GG'));
     }
 
     /**
@@ -197,9 +196,9 @@ class StrTest extends TestCase
     {
         $str = new Str('Franco Ghazaleh');
 
-        $this->assertSame(11,$str->lastIndexOf('a'));
+        $this->assertSame(11, $str->lastIndexOf('a'));
 
-        $this->assertSame(-1,$str->lastIndexOf('GG'));
+        $this->assertSame(-1, $str->lastIndexOf('GG'));
     }
 
     /**
@@ -235,5 +234,6 @@ class StrTest extends TestCase
         $str = new Str('Franco');
 
         $this->assertSame('99d2470a3073b4a570031f75896c6ac6', $str->toMd5());
+        $this->assertSame('6868e1bb931f8e534691c34dd5077fd4', $str->toMd5('some-key'));
     }
 }

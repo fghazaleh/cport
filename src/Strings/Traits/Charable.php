@@ -11,8 +11,7 @@ trait Charable
      */
     public function getIterator()
     {
-        for($i = 0; $i < $this->length(); $i++)
-        {
+        for ($i = 0; $i < $this->length(); $i++) {
             yield $this->charAt($i);
         }
     }

@@ -142,7 +142,7 @@ class Arr implements \ArrayAccess, \Countable
 
     public function chunk(int $size = 1): Arr
     {
-        if ($size < 0){
+        if ($size < 0) {
             $size = 1;
         }
 
@@ -151,7 +151,7 @@ class Arr implements \ArrayAccess, \Countable
         );
     }
 
-    public function pad(int $padSize, $value):Arr
+    public function pad(int $padSize, $value): Arr
     {
         return new static(
             array_pad($this->items, $padSize, $value)
@@ -194,7 +194,7 @@ class Arr implements \ArrayAccess, \Countable
     public function sum(string $key = null)
     {
         $items = $this->all();
-        if ($key !== null ){
+        if ($key !== null) {
             $items = $this->column($key)->all();
         }
         return array_sum($items);
