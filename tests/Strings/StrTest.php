@@ -236,4 +236,26 @@ class StrTest extends TestCase
         $this->assertSame('99d2470a3073b4a570031f75896c6ac6', $str->toMd5());
         $this->assertSame('6868e1bb931f8e534691c34dd5077fd4', $str->toMd5('some-key'));
     }
+
+    /**
+     * @test
+     */
+    public function testingContains()
+    {
+        $str = new Str('My name is Franco Gh');
+
+        $this->assertTrue($str->contains('Franco'));
+        $this->assertFalse($str->contains('franco'));
+    }
+
+    /**
+     * @test
+     */
+    public function testingAny()
+    {
+        $str = new Str('My name is Franco Gh');
+
+        $this->assertTrue($str->any('FRANCO'));
+        $this->assertTrue($str->any('franco'));
+    }
 }

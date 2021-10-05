@@ -156,7 +156,7 @@ class Str implements \IteratorAggregate
 
     public function toMd5(string $salt = ''): string
     {
-        return md5($this->value.$salt);
+        return md5($this->value . $salt);
     }
 
     public function startsWith(string $value): bool
@@ -167,6 +167,16 @@ class Str implements \IteratorAggregate
     public function endsWith(string $value): bool
     {
         return $value !== '' && substr($this->value, -strlen($value)) === $value;
+    }
+
+    public function contains(string $find): bool
+    {
+        return strpos($this->value, $find) !== false;
+    }
+
+    public function any(string $find): bool
+    {
+        return stripos($this->value, $find) !== false;
     }
 
     public function indexOf(string $find, int $offset = 0): int

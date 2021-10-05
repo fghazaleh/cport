@@ -26,6 +26,7 @@ Build-in methods in `Str` class.
 - lastIndexOf
 - charAt, charCodeAt
 - camel, studly
+- contains, any
 
 ```php
 $array = [1, 2, 3, 4];
