@@ -258,4 +258,18 @@ class StrTest extends TestCase
         $this->assertTrue($str->any('FRANCO'));
         $this->assertTrue($str->any('franco'));
     }
+
+    /**
+     * @test
+     */
+    public function testingParseQueryString()
+    {
+        $str = Str::fromString("first=value&arr[]=foo+bar&arr[]=baz");
+
+        $result = $str->parseQueryString();
+
+        $this->assertIsArray($result->all());
+        $this->assertCount(2, $result);
+        $this->assertSame('value', $result['first']);
+    }
 }

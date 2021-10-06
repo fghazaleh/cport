@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FG\Support\Strings;
 
+use FG\Support\Arrays\Arr;
 use FG\Support\Strings\Traits\Charable;
 
 class Str implements \IteratorAggregate
@@ -130,6 +131,13 @@ class Str implements \IteratorAggregate
         return new static(
             strrev($this->value)
         );
+    }
+
+    public function parseQueryString(): Arr
+    {
+        parse_str($this->value, $output);
+
+        return new Arr(is_array($output) ? $output : []);
     }
 
     /**
