@@ -133,6 +133,13 @@ class Str implements \IteratorAggregate
         );
     }
 
+    public function pad(int $length, string $padString = ' ', int $direction = STR_PAD_BOTH): Str
+    {
+        return new static(
+            str_pad($this->value, $length, $padString, $direction)
+        );
+    }
+
     public function parseQueryString(): Arr
     {
         parse_str($this->value, $output);

@@ -27,6 +27,8 @@ Build-in methods in `Str` class.
 - charAt, charCodeAt
 - camel, studly
 - contains, any
+- pad
+- parseQueryString
 
 ```php
 $array = [1, 2, 3, 4];

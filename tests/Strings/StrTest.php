@@ -272,4 +272,16 @@ class StrTest extends TestCase
         $this->assertCount(2, $result);
         $this->assertSame('value', $result['first']);
     }
+
+    /**
+     * @test
+     */
+    public function testingPad()
+    {
+        $str = Str::fromString('Franco');
+
+        $value = $str->pad(10)->toString();
+
+        $this->assertSame('  Franco  ', $value);
+    }
 }
