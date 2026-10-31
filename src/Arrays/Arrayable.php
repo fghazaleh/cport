@@ -6,22 +6,22 @@ namespace FG\Support\Arrays;
 
 trait Arrayable
 {
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->items[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->offsetExists($offset) ? $this->items[$offset] : null;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->items[$offset] = $value;
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         if (!$this->offsetExists($offset)) {
             return;

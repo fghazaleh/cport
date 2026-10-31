@@ -8,10 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class CharTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function testingCreateCharFromStatic()
+    public function testingCreateCharFromStatic(): void
     {
         $char = Char::fromCode(90);
 
@@ -19,10 +16,7 @@ class CharTest extends TestCase
         $this->assertSame('Z', $char->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingToHexMethod()
+    public function testingToHexMethod(): void
     {
         $char = new Char('a');
 

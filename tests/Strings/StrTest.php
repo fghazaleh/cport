@@ -8,20 +8,14 @@ use PHPUnit\Framework\TestCase;
 
 class StrTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function testingCreateFromStatic()
+    public function testingCreateFromStatic(): void
     {
         $str = Str::fromString('Franco Ghazaleh');
 
         $this->assertInstanceOf(Str::class, $str);
     }
 
-    /**
-     * @test
-     */
-    public function testingTraversable()
+    public function testingTraversable(): void
     {
         $str = Str::fromString('Franco');
 
@@ -32,10 +26,7 @@ class StrTest extends TestCase
         $this->assertSame('o', $char->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingSubString()
+    public function testingSubString(): void
     {
         $str = new Str('Franco Ghazaleh');
 
@@ -44,10 +35,7 @@ class StrTest extends TestCase
         $this->assertSame('co Ghazaleh', $result);
     }
 
-    /**
-     * @test
-     */
-    public function testingTrim()
+    public function testingTrim(): void
     {
         $str = new Str('  Franco  ');
         $this->assertSame('Franco', (string)$str->trim());
@@ -59,20 +47,14 @@ class StrTest extends TestCase
         $this->assertSame('Franco ', (string)$str->ltrim());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringLength()
+    public function testingStringLength(): void
     {
         $str = new Str('Franco Ghazaleh');
 
         $this->assertSame(15, $str->length());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringUpperCaseAndLowerCase()
+    public function testingStringUpperCaseAndLowerCase(): void
     {
         $str = new Str('Franco');
 
@@ -80,30 +62,21 @@ class StrTest extends TestCase
         $this->assertSame('franco', $str->toLower()->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringLowerCaseFirst()
+    public function testingStringLowerCaseFirst(): void
     {
         $str = new Str('Hello World');
 
         $this->assertSame('hello World', $str->toLowerFirst()->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringUpperCaseFirst()
+    public function testingStringUpperCaseFirst(): void
     {
         $str = new Str('hello world');
 
         $this->assertSame('Hello World', $str->toUpperFirst()->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringReplace()
+    public function testingStringReplace(): void
     {
         $str = new Str('Franco Ghazaleh');
 
@@ -112,10 +85,7 @@ class StrTest extends TestCase
         $this->assertSame('Franco 3hazaleh', $result->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringStudly()
+    public function testingStringStudly(): void
     {
         $str = new Str('build_email_list');
 
@@ -124,10 +94,7 @@ class StrTest extends TestCase
         $this->assertSame('BuildEmailList', $result->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringCamel()
+    public function testingStringCamel(): void
     {
         $str = new Str('build_email_list');
 
@@ -136,10 +103,7 @@ class StrTest extends TestCase
         $this->assertSame('buildEmailList', $result->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringAfterAndBefore()
+    public function testingStringAfterAndBefore(): void
     {
         $str = new Str('Franco');
 
@@ -148,10 +112,7 @@ class StrTest extends TestCase
         $this->assertSame('Awesome Franco', $str->appendBefore('Awesome ')->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringReverse()
+    public function testingStringReverse(): void
     {
         $str = new Str('Franco');
 
@@ -159,28 +120,19 @@ class StrTest extends TestCase
 
     }
 
-    /**
-     * @test
-     */
-    public function testingCharAt()
+    public function testingCharAt(): void
     {
         $str = new Str('Franco Ghazaleh');
         $this->assertSame('o', $str->charAt(5)->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingCharCodeAt()
+    public function testingCharCodeAt(): void
     {
         $str = new Str('Franco Ghazaleh');
         $this->assertSame(99, $str->charCodeAt(4));
     }
 
-    /**
-     * @test
-     */
-    public function testingIndexOf()
+    public function testingIndexOf(): void
     {
         $str = new Str('Franco Ghazaleh');
 
@@ -189,10 +141,7 @@ class StrTest extends TestCase
         $this->assertSame(-1, $str->indexOf('GG'));
     }
 
-    /**
-     * @test
-     */
-    public function testingLastIndexOf()
+    public function testingLastIndexOf(): void
     {
         $str = new Str('Franco Ghazaleh');
 
@@ -201,10 +150,7 @@ class StrTest extends TestCase
         $this->assertSame(-1, $str->lastIndexOf('GG'));
     }
 
-    /**
-     * @test
-     */
-    public function testingStartsWithAndEndsWith()
+    public function testingStartsWithAndEndsWith(): void
     {
         $str = new Str('Franco Ghazaleh');
 
@@ -215,10 +161,7 @@ class StrTest extends TestCase
         $this->assertFalse($str->endsWith('z'));
     }
 
-    /**
-     * @test
-     */
-    public function testingStripTags()
+    public function testingStripTags(): void
     {
         $str = new Str('<h1><b>Franco Ghazaleh</b></h1>');
 
@@ -226,10 +169,7 @@ class StrTest extends TestCase
         $this->assertSame('<b>Franco Ghazaleh</b>', $str->stripTags('<b>')->toString());
     }
 
-    /**
-     * @test
-     */
-    public function testingStringMd5()
+    public function testingStringMd5(): void
     {
         $str = new Str('Franco');
 
@@ -237,10 +177,7 @@ class StrTest extends TestCase
         $this->assertSame('6868e1bb931f8e534691c34dd5077fd4', $str->toMd5('some-key'));
     }
 
-    /**
-     * @test
-     */
-    public function testingContains()
+    public function testingContains(): void
     {
         $str = new Str('My name is Franco Gh');
 
@@ -248,10 +185,7 @@ class StrTest extends TestCase
         $this->assertFalse($str->contains('franco'));
     }
 
-    /**
-     * @test
-     */
-    public function testingAny()
+    public function testingAny(): void
     {
         $str = new Str('My name is Franco Gh');
 
@@ -259,10 +193,7 @@ class StrTest extends TestCase
         $this->assertTrue($str->any('franco'));
     }
 
-    /**
-     * @test
-     */
-    public function testingParseQueryString()
+    public function testingParseQueryString(): void
     {
         $str = Str::fromString("first=value&arr[]=foo+bar&arr[]=baz");
 
@@ -273,10 +204,7 @@ class StrTest extends TestCase
         $this->assertSame('value', $result['first']);
     }
 
-    /**
-     * @test
-     */
-    public function testingPad()
+    public function testingPad(): void
     {
         $str = Str::fromString('Franco');
 

@@ -11,14 +11,11 @@ class Str implements \IteratorAggregate
 {
     use Charable;
 
-    private $value = '';
-
-    public function __construct(string $value = '')
+    public function __construct(private readonly string $value = '')
     {
-        $this->value = $value;
     }
 
-    public static function fromString(string $value): Str
+    public static function fromString(string $value): static
     {
         return new static($value);
     }
@@ -33,21 +30,21 @@ class Str implements \IteratorAggregate
         return $this->toString();
     }
 
-    public function trim($char = ' '): Str
+    public function trim(string $char = ' '): static
     {
         return new static(
             trim($this->value, $char)
         );
     }
 
-    public function rtrim($char = ' '): Str
+    public function rtrim(string $char = ' '): static
     {
         return new static(
             rtrim($this->value, $char)
         );
     }
 
-    public function ltrim($char = ' '): self
+    public function ltrim(string $char = ' '): self
     {
         return new static(
             ltrim($this->value, $char)
@@ -59,28 +56,28 @@ class Str implements \IteratorAggregate
         return strlen($this->value);
     }
 
-    public function toUpper(): Str
+    public function toUpper(): static
     {
         return new static(
             strtoupper($this->value)
         );
     }
 
-    public function toLower(): Str
+    public function toLower(): static
     {
         return new static(
             strtolower($this->value)
         );
     }
 
-    public function toLowerFirst(): Str
+    public function toLowerFirst(): static
     {
         return new static(
             lcfirst($this->value)
         );
     }
 
-    public function toUpperFirst(): Str
+    public function toUpperFirst(): static
     {
         return new static(
             ucwords($this->value)
@@ -88,18 +85,15 @@ class Str implements \IteratorAggregate
     }
 
     /**
-     * @param array|string $search
-     * @param array|string $replace
-     * @return Str
      */
-    public function replace($search, $replace): Str
+    public function replace(array|string $search, array|string $replace): static
     {
         return new static(
             str_replace($search, $replace, $this->value)
         );
     }
 
-    public function subString(int $start, ?int $length = null): Str
+    public function subString(int $start, ?int $length = null): static
     {
         if ($length === null) {
             return new static(
@@ -111,29 +105,29 @@ class Str implements \IteratorAggregate
         );
     }
 
-    public function appendAfter(string $value): Str
+    public function appendAfter(string $value): static
     {
         return new static($this->value . $value);
     }
 
-    public function appendBefore(string $value): Str
+    public function appendBefore(string $value): static
     {
         return new static($value . $this->value);
     }
 
-    public function stripTags($allows = null): Str
+    public function stripTags(array|string|null $allows = null): static
     {
         return new static(strip_tags($this->value, $allows));
     }
 
-    public function reverse(): Str
+    public function reverse(): static
     {
         return new static(
             strrev($this->value)
         );
     }
 
-    public function pad(int $length, string $padString = ' ', int $direction = STR_PAD_BOTH): Str
+    public function pad(int $length, string $padString = ' ', int $direction = STR_PAD_BOTH): static
     {
         return new static(
             str_pad($this->value, $length, $padString, $direction)
@@ -144,25 +138,21 @@ class Str implements \IteratorAggregate
     {
         parse_str($this->value, $output);
 
-        return new Arr(is_array($output) ? $output : []);
+        return new Arr($output);
     }
 
     /**
      * Convert a value to camel case.
-     *
-     * @return Str
      */
-    public function camel(): Str
+    public function camel(): static
     {
         return $this->studly()->toLowerFirst();
     }
 
     /**
      * Convert a value to studly caps case.
-     *
-     * @return Str
      */
-    public function studly(): Str
+    public function studly(): static
     {
         return $this->replace(['-', '_'], ' ')
             ->toUpperFirst()
@@ -176,17 +166,17 @@ class Str implements \IteratorAggregate
 
     public function startsWith(string $value): bool
     {
-        return ($value !== '' && strncmp($this->value, $value, strlen($value)) === 0);
+        return $value !== '' && str_starts_with($this->value, $value);
     }
 
     public function endsWith(string $value): bool
     {
-        return $value !== '' && substr($this->value, -strlen($value)) === $value;
+        return $value !== '' && str_ends_with($this->value, $value);
     }
 
     public function contains(string $find): bool
     {
-        return strpos($this->value, $find) !== false;
+        return str_contains($this->value, $find);
     }
 
     public function any(string $find): bool

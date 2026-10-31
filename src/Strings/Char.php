@@ -6,14 +6,8 @@ namespace FG\Support\Strings;
 
 class Char
 {
-    /**
-     * @var string
-     */
-    private $char;
-
-    public function __construct(string $char)
+    public function __construct(private readonly string $char)
     {
-        $this->char = $char;
     }
 
     public function toString(): string
@@ -41,8 +35,8 @@ class Char
         return bin2hex($this->char);
     }
 
-    public static function fromCode(int $byteValue): Char
+    public static function fromCode(int $byteValue): static
     {
-        return new Char(chr($byteValue));
+        return new static(chr($byteValue));
     }
 }
