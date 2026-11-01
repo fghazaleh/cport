@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FG\Support\Strings;
 
+use FG\Support\Exceptions\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class StrTest extends TestCase
@@ -38,13 +39,13 @@ class StrTest extends TestCase
     public function testingTrim(): void
     {
         $str = new Str('  Franco  ');
-        $this->assertSame('Franco', (string)$str->trim());
+        $this->assertSame('Franco', (string) $str->trim());
 
         $str = new Str(' Franco ');
-        $this->assertSame(' Franco', (string)$str->rtrim());
+        $this->assertSame(' Franco', (string) $str->rtrim());
 
         $str = new Str(' Franco ');
-        $this->assertSame('Franco ', (string)$str->ltrim());
+        $this->assertSame('Franco ', (string) $str->ltrim());
     }
 
     public function testingStringLength(): void
@@ -195,7 +196,7 @@ class StrTest extends TestCase
 
     public function testingParseQueryString(): void
     {
-        $str = Str::fromString("first=value&arr[]=foo+bar&arr[]=baz");
+        $str = Str::fromString('first=value&arr[]=foo+bar&arr[]=baz');
 
         $result = $str->parseQueryString();
 
@@ -211,5 +212,131 @@ class StrTest extends TestCase
         $value = $str->pad(10)->toString();
 
         $this->assertSame('  Franco  ', $value);
+    }
+
+    public function testingMultibyteLengthAndCase(): void
+    {
+        $str = new Str('Élan àéî');
+
+        $this->assertSame(8, $str->length());
+        $this->assertSame('ÉLAN ÀÉÎ', $str->toUpper()->toString());
+        $this->assertSame('élan àéî', $str->toLower()->toString());
+        $this->assertSame('élan àéî', $str->toLowerFirst()->toString());
+        $this->assertSame('Élan Àéî', (new Str('élan àéî'))->toUpperFirst()->toString());
+    }
+
+    public function testingMultibyteSubStringReverseAndSearch(): void
+    {
+        $str = new Str('héllo wörld');
+
+        $this->assertSame('éllo', $str->subString(1, 4)->toString());
+        $this->assertSame('dlröw olléh', $str->reverse()->toString());
+        $this->assertSame(6, $str->indexOf('w'));
+        $this->assertSame(1, $str->indexOf('é'));
+        $this->assertSame(8, $str->lastIndexOf('r'));
+        $this->assertTrue($str->any('WÖR'));
+    }
+
+    public function testingMultibytePad(): void
+    {
+        $this->assertSame('--é--', (new Str('é'))->pad(5, '-')->toString());
+    }
+
+    public function testingIteratingYieldsCharacters(): void
+    {
+        $chars = [];
+        foreach (new Str('aé') as $char) {
+            $chars[] = $char->toString();
+        }
+
+        $this->assertSame(['a', 'é'], $chars);
+    }
+
+    public function testingCharAtAndCodeAtAreMultibyteSafe(): void
+    {
+        $str = new Str('aé');
+
+        $this->assertSame('é', $str->charAt(1)->toString());
+        $this->assertSame(233, $str->charCodeAt(1));
+    }
+
+    public function testingIsEmpty(): void
+    {
+        $this->assertTrue((new Str())->isEmpty());
+        $this->assertTrue((new Str('a'))->isNotEmpty());
+    }
+
+    public function testingExplode(): void
+    {
+        $this->assertSame(['a', 'b', 'c'], (new Str('a,b,c'))->explode(',')->all());
+        $this->assertSame(['a', 'b,c'], (new Str('a,b,c'))->explode(',', 2)->all());
+    }
+
+    public function testingExplodeWithEmptyDelimiterThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        (new Str('abc'))->explode('');
+    }
+
+    public function testingRepeat(): void
+    {
+        $this->assertSame('ababab', (new Str('ab'))->repeat(3)->toString());
+        $this->assertSame('', (new Str('ab'))->repeat(0)->toString());
+    }
+
+    public function testingRepeatNegativeThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        (new Str('ab'))->repeat(-1);
+    }
+
+    public function testingLimit(): void
+    {
+        $this->assertSame('The quick...', (new Str('The quick brown fox'))->limit(10)->toString());
+        $this->assertSame('short', (new Str('short'))->limit(10)->toString());
+        $this->assertSame('héllo>', (new Str('héllo wörld'))->limit(5, '>')->toString());
+    }
+
+    public function testingTitleAndWordCount(): void
+    {
+        $this->assertSame('Hello World', (new Str('hello WORLD'))->title()->toString());
+        $this->assertSame(3, (new Str('  one two   three '))->wordCount());
+        $this->assertSame(0, (new Str('   '))->wordCount());
+    }
+
+    public function testingSnakeAndKebab(): void
+    {
+        $this->assertSame('foo_bar_baz', (new Str('fooBar baz'))->snake()->toString());
+        $this->assertSame('foo_bar_baz', (new Str('FooBar-Baz'))->snake()->toString());
+        $this->assertSame('foo-bar-baz', (new Str('foo_bar baz'))->kebab()->toString());
+        $this->assertSame('foo-bar', (new Str('fooBar'))->kebab()->toString());
+    }
+
+    public function testingSlug(): void
+    {
+        $this->assertSame('hello-world', (new Str('  Hello, World! '))->slug()->toString());
+        $this->assertSame('hello_world', (new Str('Hello World'))->slug('_')->toString());
+        $this->assertSame('héllo-wörld', (new Str('Héllo Wörld'))->slug()->toString());
+    }
+
+    public function testingBeforeAfterBetween(): void
+    {
+        $str = new Str('[name](value)(more)');
+
+        $this->assertSame('[name]', $str->before('(')->toString());
+        $this->assertSame('value)(more)', $str->after('(')->toString());
+        $this->assertSame('name', $str->between('[', ']')->toString());
+        $this->assertSame('value)(more', $str->between('(', ')')->toString());
+        $this->assertSame('[name](value)', $str->beforeLast('(')->toString());
+        $this->assertSame($str->toString(), $str->before('#')->toString());
+        $this->assertSame($str->toString(), $str->after('#')->toString());
+    }
+
+    public function testingStringsAreImmutable(): void
+    {
+        $str = new Str('abc');
+        $str->toUpper()->reverse()->appendAfter('x');
+
+        $this->assertSame('abc', $str->toString());
     }
 }
