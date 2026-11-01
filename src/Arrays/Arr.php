@@ -6,58 +6,55 @@ namespace FG\Support\Arrays;
 
 class Arr implements \ArrayAccess, \Countable
 {
-    const SORT_ASC = 'ASC';
-    const SORT_DESC = 'DESC';
-    const SORT_NAT = 'NAT';
+    public const string SORT_ASC = 'ASC';
+    public const string SORT_DESC = 'DESC';
+    public const string SORT_NAT = 'NAT';
 
     use Arrayable;
 
-    private $items = [];
-
-    public function __construct(array $items = [])
+    public function __construct(private array $items = [])
     {
-        $this->items = $items;
     }
 
-    public static function createFrom(array $items): Arr
+    public static function createFrom(array $items): static
     {
         return new static($items);
     }
 
-    public static function fill($value, int $size, int $startIndex = 0): Arr
+    public static function fill(mixed $value, int $size, int $startIndex = 0): static
     {
         return new static(
             array_fill($startIndex, $size, $value)
         );
     }
 
-    public function add($item): Arr
+    public function add(mixed $item): static
     {
         array_push($this->items, $item);
         return $this;
     }
 
-    public function merge(array $items): Arr
+    public function merge(array $items): static
     {
         return new static(
             array_merge($this->items, $items)
         );
     }
 
-    public function slice(int $offset, int $length): Arr
+    public function slice(int $offset, int $length): static
     {
         return new static(
             array_slice($this->items, $offset, $length)
         );
     }
 
-    public function map(callable $callable): Arr
+    public function map(callable $callable): static
     {
         $this->items = array_map($callable, $this->items);
         return $this;
     }
 
-    public function each(callable $callback): Arr
+    public function each(callable $callback): static
     {
         foreach ($this->items as $key => $item) {
             if ($callback($item, $key) === false) {
@@ -67,34 +64,34 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function where(callable $where): Arr
+    public function where(callable $where): static
     {
         $items = array_filter($this->items, $where);
         return new static($items);
     }
 
-    public function column($key): Arr
+    public function column(string|int|null $key): static
     {
         return new static(
             array_column($this->items, $key)
         );
     }
 
-    public function combine(array $array): Arr
+    public function combine(array $array): static
     {
         return new static(
             array_combine($this->items, $array)
         );
     }
 
-    public function diff(array $array): Arr
+    public function diff(array $array): static
     {
         return new static(
             array_diff($this->items, $array)
         );
     }
 
-    public function flip(): Arr
+    public function flip(): static
     {
         return new static(
             array_flip($this->items)
@@ -110,24 +107,19 @@ class Arr implements \ArrayAccess, \Countable
      * @param string $type 'ASC' or 'DESC', 'NAT'
      * @return Arr
      */
-    public function sort(string $type = Arr::SORT_ASC): Arr
+    public function sort(string $type = self::SORT_ASC): static
     {
         $items = $this->items;
-        switch ($type) {
-            case Arr::SORT_DESC:
-                arsort($items);
-                break;
-            case Arr::SORT_NAT:
-                natsort($items);
-                break;
-            default;
-                asort($items);
-        }
+        match ($type) {
+            self::SORT_DESC => arsort($items),
+            self::SORT_NAT => natsort($items),
+            default => asort($items),
+        };
         $this->items = $items;
         return $this;
     }
 
-    public function whereSort(callable $where): Arr
+    public function whereSort(callable $where): static
     {
         $items = $this->items;
         uasort($items, $where);
@@ -135,12 +127,12 @@ class Arr implements \ArrayAccess, \Countable
         return $this;
     }
 
-    public function keys(): Arr
+    public function keys(): static
     {
         return new static(array_keys($this->items));
     }
 
-    public function chunk(int $size = 1): Arr
+    public function chunk(int $size = 1): static
     {
         if ($size < 0) {
             $size = 1;
@@ -151,14 +143,14 @@ class Arr implements \ArrayAccess, \Countable
         );
     }
 
-    public function pad(int $padSize, $value): Arr
+    public function pad(int $padSize, mixed $value): static
     {
         return new static(
             array_pad($this->items, $padSize, $value)
         );
     }
 
-    public function keyExists($key): bool
+    public function keyExists(string|int $key): bool
     {
         return array_key_exists($key, $this->items);
     }
@@ -169,7 +161,7 @@ class Arr implements \ArrayAccess, \Countable
      * @param callable $where
      * @return mixed
      */
-    public function first(callable $where)
+    public function first(callable $where): mixed
     {
         $items = $this->where($where)->all();
         return array_shift($items);
@@ -181,7 +173,7 @@ class Arr implements \ArrayAccess, \Countable
      * @param callable $where
      * @return mixed
      */
-    public function last(callable $where)
+    public function last(callable $where): mixed
     {
         $items = $this->where($where)->all();
         return array_pop($items);
@@ -189,9 +181,8 @@ class Arr implements \ArrayAccess, \Countable
 
     /**
      * @param string|null $key
-     * @return int|float
      */
-    public function sum(string $key = null)
+    public function sum(?string $key = null): int|float
     {
         $items = $this->all();
         if ($key !== null) {
@@ -205,9 +196,8 @@ class Arr implements \ArrayAccess, \Countable
      *
      * @param int $size
      *
-     * @return array|mixed
      */
-    public function rand(int $size = 1)
+    public function rand(int $size = 1): int|string|array
     {
         return array_rand($this->all(), $size);
     }
@@ -217,7 +207,7 @@ class Arr implements \ArrayAccess, \Countable
         return $this->items;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->all());
     }

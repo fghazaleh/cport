@@ -8,28 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 class ArrTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function testingCreateNewArrInstance()
+    public function testingCreateNewArrInstance(): void
     {
         $arr = new Arr([1, 2, 3]);
         $this->assertInstanceOf(Arr::class, $arr);
     }
 
-    /**
-     * @test
-     */
-    public function testingCreateArrInstanceFromStatic()
+    public function testingCreateArrInstanceFromStatic(): void
     {
         $arr = Arr::createFrom([1, 2, 3]);
         $this->assertInstanceOf(Arr::class, $arr);
     }
 
-    /**
-     * @test
-     */
-    public function testingArraySlice()
+    public function testingArraySlice(): void
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
 
@@ -37,30 +28,21 @@ class ArrTest extends TestCase
         $this->assertSame([4, 5], $result->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingAddToArray()
+    public function testingAddToArray(): void
     {
         $arr = new Arr([1, 2]);
         $arr->add(3);
         $this->assertSame([1, 2, 3], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingMergeArrays()
+    public function testingMergeArrays(): void
     {
         $arr = new Arr([1, 2]);
         $arr = $arr->merge([3, 4]);
         $this->assertSame([1, 2, 3, 4], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrMap()
+    public function testingArrMap(): void
     {
         $arr = new Arr([1, 2, 3]);
         $arr->map(function ($item) {
@@ -69,10 +51,7 @@ class ArrTest extends TestCase
         $this->assertSame([2, 4, 6], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrEach()
+    public function testingArrEach(): void
     {
         $arr = new Arr([1, 2, 3]);
         $result = [];
@@ -85,10 +64,7 @@ class ArrTest extends TestCase
         $this->assertSame([1], $result);
     }
 
-    /**
-     * @test
-     */
-    public function testingArrWhere()
+    public function testingArrWhere(): void
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
         $result = $arr->where(function ($item) {
@@ -98,10 +74,7 @@ class ArrTest extends TestCase
         $this->assertEquals([1 => 2, 3 => 4, 5 => 6], $result);
     }
 
-    /**
-     * @test
-     */
-    public function testingArrFirst()
+    public function testingArrFirst(): void
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
         $result = $arr->first(function ($item) {
@@ -111,10 +84,7 @@ class ArrTest extends TestCase
         $this->assertSame(2, $result);
     }
 
-    /**
-     * @test
-     */
-    public function testingArrLast()
+    public function testingArrLast(): void
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
         $result = $arr->last(function ($item) {
@@ -124,20 +94,14 @@ class ArrTest extends TestCase
         $this->assertSame(5, $result);
     }
 
-    /**
-     * @test
-     */
-    public function testingCount()
+    public function testingCount(): void
     {
         $arr = new Arr([1, 2, 3, 4, 5, 6]);
 
         $this->assertSame(6, $arr->count());
     }
 
-    /**
-     * @test
-     */
-    public function testingColumn()
+    public function testingColumn(): void
     {
         $array = [
             [
@@ -157,10 +121,7 @@ class ArrTest extends TestCase
         $this->assertSame([0 => 'Griffin', 1 => 'Smith'], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingCombine()
+    public function testingCombine(): void
     {
         $age = [22, 43, 52];
         $arr = new Arr(['Peter', 'Ben', 'Joe']);
@@ -169,10 +130,7 @@ class ArrTest extends TestCase
         $this->assertSame(['Peter' => 22, 'Ben' => 43, 'Joe' => 52], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrSorting()
+    public function testingArrSorting(): void
     {
         $arr = new Arr(['Peter' => 43, 'Ben' => 32, 'Joe' => 52]);
         $arr->sort();
@@ -187,10 +145,7 @@ class ArrTest extends TestCase
         $this->assertSame([2 => 'temp1.txt', 0 => 'temp2.txt', 1 => 'temp10.txt'], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrWhereSort()
+    public function testingArrWhereSort(): void
     {
         $arr = Arr::createFrom(['a' => 4, 'b' => 2, 'c' => 8, 'd' => 6]);
 
@@ -201,10 +156,7 @@ class ArrTest extends TestCase
         $this->assertSame(['b' => 2, 'a' => 4, 'd' => 6, 'c' => 8], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingKeys()
+    public function testingKeys(): void
     {
         $arr = Arr::createFrom(['a' => 4, 'b' => 2, 'c' => 8, 'd' => 6]);
 
@@ -213,10 +165,7 @@ class ArrTest extends TestCase
         $this->assertSame(['a', 'b', 'c', 'd'], $keys->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingKeyExists()
+    public function testingKeyExists(): void
     {
         $arr = Arr::createFrom(['key1' => 'Franco', 'key3' => 'Foo']);
 
@@ -224,10 +173,7 @@ class ArrTest extends TestCase
         $this->assertFalse($arr->keyExists('key2'));
     }
 
-    /**
-     * @test
-     */
-    public function testingArrDiff()
+    public function testingArrDiff(): void
     {
         $arr = new Arr(['a' => 'red', 'b' => 'green', 'c' => 'blue', 'd' => 'yellow']);
         $arr = $arr->diff(['e' => 'red', 'f' => 'green', 'g' => 'blue']);
@@ -235,10 +181,7 @@ class ArrTest extends TestCase
         $this->assertSame(['d' => 'yellow'], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrFlip()
+    public function testingArrFlip(): void
     {
         $arr = new Arr(['a' => 'red', 'b' => 'green']);
         $this->assertSame([
@@ -247,10 +190,7 @@ class ArrTest extends TestCase
         ], $arr->flip()->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrSum()
+    public function testingArrSum(): void
     {
         $arr1 = new Arr([1, 2, 3]);
         $arr2 = new Arr([
@@ -261,10 +201,7 @@ class ArrTest extends TestCase
         $this->assertSame(66, $arr2->sum('salary'));
     }
 
-    /**
-     * @test
-     */
-    public function testingArrChunk()
+    public function testingArrChunk(): void
     {
         $arr = new Arr(['Volvo', 'BMW', 'Toyota', 'Honda', 'Mercedes', 'Opel']);
 
@@ -277,10 +214,7 @@ class ArrTest extends TestCase
         ], $result->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrPad()
+    public function testingArrPad(): void
     {
         $arr = new Arr([12, 10, 9]);
 
@@ -289,10 +223,7 @@ class ArrTest extends TestCase
         $this->assertSame([12, 10, 9, 0, 0, 0], $result->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrFill()
+    public function testingArrFill(): void
     {
         $arr = Arr::fill('franco', 4);
 
@@ -300,10 +231,7 @@ class ArrTest extends TestCase
         $this->assertSame(['franco', 'franco', 'franco', 'franco'], $arr->all());
     }
 
-    /**
-     * @test
-     */
-    public function testingArrRand()
+    public function testingArrRand(): void
     {
         $arr = Arr::createFrom([12, 10, 9, 4, 5]);
 
