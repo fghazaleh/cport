@@ -2,11 +2,14 @@
   "name": "fghazaleh/cport",
   "description": "PHP support library for Array and String PHP function",
   "type": "library",
-  "require":{
-    "php": ">=8.3"
+  "require": {
+    "php": ">=8.5",
+    "ext-json": "*",
+    "ext-mbstring": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^11.5"
+    "friendsofphp/php-cs-fixer": "^3.64",
+    "phpunit/phpunit": "^12.0"
   },
   "license": "MIT",
   "authors": [
@@ -19,5 +22,17 @@
     "psr-4": {
       "FG\\Support\\": "src/"
     }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "cs": "php-cs-fixer fix --dry-run --diff --show-progress=none",
+    "cs:fix": "php-cs-fixer fix",
+    "check": [
+      "@cs",
+      "@test"
+    ]
+  },
+  "config": {
+    "sort-packages": true
   }
 }

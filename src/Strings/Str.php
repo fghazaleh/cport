@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace FG\Support\Strings;
 
 use FG\Support\Arrays\Arr;
+use FG\Support\Exceptions\InvalidArgumentException;
 use FG\Support\Strings\Traits\Charable;
 
 class Str implements \IteratorAggregate
 {
     use Charable;
 
-    public function __construct(private readonly string $value = '')
-    {
-    }
+    public function __construct(private readonly string $value = '') {}
 
     public static function fromString(string $value): static
     {
@@ -33,54 +32,54 @@ class Str implements \IteratorAggregate
     public function trim(string $char = ' '): static
     {
         return new static(
-            trim($this->value, $char)
+            trim($this->value, $char),
         );
     }
 
     public function rtrim(string $char = ' '): static
     {
         return new static(
-            rtrim($this->value, $char)
+            rtrim($this->value, $char),
         );
     }
 
     public function ltrim(string $char = ' '): self
     {
         return new static(
-            ltrim($this->value, $char)
+            ltrim($this->value, $char),
         );
     }
 
     public function length(): int
     {
-        return strlen($this->value);
+        return mb_strlen($this->value);
     }
 
     public function toUpper(): static
     {
         return new static(
-            strtoupper($this->value)
+            mb_strtoupper($this->value),
         );
     }
 
     public function toLower(): static
     {
         return new static(
-            strtolower($this->value)
+            mb_strtolower($this->value),
         );
     }
 
     public function toLowerFirst(): static
     {
         return new static(
-            lcfirst($this->value)
+            mb_strtolower(mb_substr($this->value, 0, 1)) . mb_substr($this->value, 1),
         );
     }
 
     public function toUpperFirst(): static
     {
         return new static(
-            ucwords($this->value)
+            preg_replace_callback('/(?<!\S)\S/u', static fn(array $m): string => mb_strtoupper($m[0]), $this->value),
         );
     }
 
@@ -89,7 +88,7 @@ class Str implements \IteratorAggregate
     public function replace(array|string $search, array|string $replace): static
     {
         return new static(
-            str_replace($search, $replace, $this->value)
+            str_replace($search, $replace, $this->value),
         );
     }
 
@@ -97,11 +96,11 @@ class Str implements \IteratorAggregate
     {
         if ($length === null) {
             return new static(
-                substr($this->value, $start)
+                mb_substr($this->value, $start),
             );
         }
         return new static(
-            substr($this->value, $start, $length)
+            mb_substr($this->value, $start, $length),
         );
     }
 
@@ -123,14 +122,14 @@ class Str implements \IteratorAggregate
     public function reverse(): static
     {
         return new static(
-            strrev($this->value)
+            implode('', array_reverse(mb_str_split($this->value))),
         );
     }
 
     public function pad(int $length, string $padString = ' ', int $direction = STR_PAD_BOTH): static
     {
         return new static(
-            str_pad($this->value, $length, $padString, $direction)
+            mb_str_pad($this->value, $length, $padString, $direction),
         );
     }
 
@@ -181,12 +180,12 @@ class Str implements \IteratorAggregate
 
     public function any(string $find): bool
     {
-        return stripos($this->value, $find) !== false;
+        return mb_stripos($this->value, $find) !== false;
     }
 
     public function indexOf(string $find, int $offset = 0): int
     {
-        $pos = strpos($this->value, $find, $offset);
+        $pos = mb_strpos($this->value, $find, $offset);
         if ($pos === false) {
             return -1;
         }
@@ -196,7 +195,7 @@ class Str implements \IteratorAggregate
 
     public function lastIndexOf(string $find, int $offset = 0): int
     {
-        $pos = strrpos($this->value, $find, $offset);
+        $pos = mb_strrpos($this->value, $find, $offset);
         if ($pos === false) {
             return -1;
         }
@@ -204,12 +203,155 @@ class Str implements \IteratorAggregate
         return $pos;
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->value === '';
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
+    }
+
+    /**
+     * Splits the string into an Arr using a delimiter.
+     *
+     * @throws InvalidArgumentException when the delimiter is empty
+     */
+    public function explode(string $delimiter, int $limit = PHP_INT_MAX): Arr
+    {
+        if ($delimiter === '') {
+            throw new InvalidArgumentException('The delimiter cannot be an empty string.');
+        }
+
+        return new Arr(explode($delimiter, $this->value, $limit));
+    }
+
+    public function repeat(int $times): static
+    {
+        if ($times < 0) {
+            throw new InvalidArgumentException('Times cannot be negative.');
+        }
+
+        return new static(str_repeat($this->value, $times));
+    }
+
+    /**
+     * Truncates to $limit characters, appending $end when truncated.
+     */
+    public function limit(int $limit, string $end = '...'): static
+    {
+        if (mb_strlen($this->value) <= $limit) {
+            return $this;
+        }
+
+        return new static(rtrim(mb_substr($this->value, 0, $limit)) . $end);
+    }
+
+    /**
+     * Converts the string to title case ("hello world" => "Hello World").
+     */
+    public function title(): static
+    {
+        return new static(mb_convert_case($this->value, MB_CASE_TITLE));
+    }
+
+    public function wordCount(): int
+    {
+        return \count(preg_split('/\s+/u', trim($this->value), -1, PREG_SPLIT_NO_EMPTY));
+    }
+
+    /**
+     * Converts to snake_case ("fooBar baz" => "foo_bar_baz").
+     */
+    public function snake(string $delimiter = '_'): static
+    {
+        return new static(mb_strtolower($this->splitWords($delimiter)));
+    }
+
+    /**
+     * Converts to kebab-case ("fooBar baz" => "foo-bar-baz").
+     */
+    public function kebab(): static
+    {
+        return $this->snake('-');
+    }
+
+    /**
+     * Makes a URL friendly, lowercase slug. Unicode letters and digits are kept.
+     */
+    public function slug(string $separator = '-'): static
+    {
+        return new static(mb_strtolower(
+            trim((string) preg_replace('/[^\p{L}\p{N}]+/u', $separator, $this->value), $separator),
+        ));
+    }
+
+    /**
+     * The part of the string before the first occurrence of $search.
+     */
+    public function before(string $search): static
+    {
+        if ($search === '') {
+            return $this;
+        }
+        $pos = mb_strpos($this->value, $search);
+
+        return $pos === false ? $this : new static(mb_substr($this->value, 0, $pos));
+    }
+
+    /**
+     * The part of the string after the first occurrence of $search.
+     */
+    public function after(string $search): static
+    {
+        if ($search === '') {
+            return $this;
+        }
+        $pos = mb_strpos($this->value, $search);
+
+        return $pos === false ? $this : new static(mb_substr($this->value, $pos + mb_strlen($search)));
+    }
+
+    /**
+     * The part of the string between two values.
+     */
+    public function between(string $from, string $to): static
+    {
+        if ($from === '' || $to === '') {
+            return $this;
+        }
+
+        return $this->after($from)->beforeLast($to);
+    }
+
+    /**
+     * The part of the string before the last occurrence of $search.
+     */
+    public function beforeLast(string $search): static
+    {
+        if ($search === '') {
+            return $this;
+        }
+        $pos = mb_strrpos($this->value, $search);
+
+        return $pos === false ? $this : new static(mb_substr($this->value, 0, $pos));
+    }
+
+    private function splitWords(string $delimiter): string
+    {
+        $value = (string) preg_replace('/(?<=[\p{Ll}\p{N}])(?=\p{Lu})/u', ' ', $this->value);
+        $value = (string) preg_replace('/[^\p{L}\p{N}]+/u', $delimiter, $value);
+
+        return trim($value, $delimiter);
+    }
+
     public function charAt(int $index): Char
     {
         return new Char(
             $this
                 ->subString($index, 1)
-                ->toString()
+                ->toString(),
         );
     }
 

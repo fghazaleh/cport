@@ -6,9 +6,7 @@ namespace FG\Support\Strings;
 
 class Char
 {
-    public function __construct(private readonly string $char)
-    {
-    }
+    public function __construct(private readonly string $char) {}
 
     public function toString(): string
     {
@@ -20,23 +18,24 @@ class Char
         return $this->toString();
     }
 
+    /**
+     * Unicode code point of the character.
+     */
     public function code(): int
     {
-        return ord($this->char);
+        return mb_ord($this->char);
     }
 
     /**
-     * Converts a string of ASCII characters to hexadecimal values
-     *
-     * @return string
+     * Converts the character's bytes to hexadecimal values
      */
     public function toHex(): string
     {
         return bin2hex($this->char);
     }
 
-    public static function fromCode(int $byteValue): static
+    public static function fromCode(int $codePoint): static
     {
-        return new static(chr($byteValue));
+        return new static(mb_chr($codePoint));
     }
 }
