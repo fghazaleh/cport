@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FG\Support\Arrays;
 
 use FG\Support\Exceptions\InvalidArgumentException;
+use FG\Support\Math\Math;
 
 /**
  * Immutable array wrapper: every method returns a new instance.
@@ -385,6 +386,84 @@ class Arr implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializ
     }
 
     /**
+     * Arithmetic mean of the numeric values (or of a column), null when empty.
+     */
+    public function avg(?string $key = null): ?float
+    {
+        $values = $this->numbers($key);
+
+        return $values === [] ? null : Math::avg(...$values);
+    }
+
+    /**
+     * Smallest numeric value (or of a column), null when empty.
+     */
+    public function min(?string $key = null): int|float|null
+    {
+        $values = $this->numbers($key);
+
+        return $values === [] ? null : Math::min(...$values);
+    }
+
+    /**
+     * Largest numeric value (or of a column), null when empty.
+     */
+    public function max(?string $key = null): int|float|null
+    {
+        $values = $this->numbers($key);
+
+        return $values === [] ? null : Math::max(...$values);
+    }
+
+    /**
+     * Median of the numeric values (or of a column), null when empty.
+     */
+    public function median(?string $key = null): int|float|null
+    {
+        $values = $this->numbers($key);
+
+        return $values === [] ? null : Math::median(...$values);
+    }
+
+    /**
+     * The most frequent numeric value(s) as an Arr, sorted ascending.
+     */
+    public function mode(?string $key = null): static
+    {
+        $values = $this->numbers($key);
+
+        return new static($values === [] ? [] : Math::mode(...$values));
+    }
+
+    /**
+     * Percentile (0-100) with linear interpolation, null when empty.
+     *
+     * @throws InvalidArgumentException when $percentile is out of range
+     */
+    public function percentile(float $percentile, ?string $key = null): ?float
+    {
+        $values = $this->numbers($key);
+
+        return $values === [] ? null : Math::percentile($values, $percentile);
+    }
+
+    /**
+     * Counts the items per value, or per result of the callback.
+     * The result maps each value (or callback result) to its number of occurrences.
+     */
+    public function countBy(?callable $callback = null): static
+    {
+        $counts = [];
+        foreach ($this->items as $key => $item) {
+            $group = $callback === null ? $item : $callback($item, $key);
+            $group = \is_int($group) ? $group : (string) $group;
+            $counts[$group] = ($counts[$group] ?? 0) + 1;
+        }
+
+        return new static($counts);
+    }
+
+    /**
      * Returns one random key, or an array of random keys when $size > 1.
      *
      * @throws InvalidArgumentException when $size is out of range
@@ -429,6 +508,14 @@ class Arr implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializ
     public function count(): int
     {
         return \count($this->items);
+    }
+
+    /**
+     * @return list<int|float>
+     */
+    private function numbers(?string $key): array
+    {
+        return array_values($key === null ? $this->items : array_column($this->items, $key));
     }
 
     private static function dotGet(array $items, string $key, mixed $default): mixed

@@ -415,4 +415,56 @@ class ArrTest extends TestCase
         $this->assertSame('ASC', SortOrder::Asc->value);
         $this->assertSame(SortOrder::Natural, SortOrder::from('NAT'));
     }
+
+    public function testingStatistics(): void
+    {
+        $arr = new Arr([4, 1, 3, 2, 2]);
+
+        $this->assertSame(2.4, $arr->avg());
+        $this->assertSame(1, $arr->min());
+        $this->assertSame(4, $arr->max());
+        $this->assertSame(2, $arr->median());
+        $this->assertSame([2], $arr->mode()->all());
+        $this->assertSame(3.0, $arr->percentile(75));
+    }
+
+    public function testingStatisticsOnAColumn(): void
+    {
+        $arr = new Arr([
+            ['name' => 'a', 'salary' => 10],
+            ['name' => 'b', 'salary' => 30],
+            ['name' => 'c', 'salary' => 20],
+        ]);
+
+        $this->assertSame(20.0, $arr->avg('salary'));
+        $this->assertSame(10, $arr->min('salary'));
+        $this->assertSame(30, $arr->max('salary'));
+        $this->assertSame(20, $arr->median('salary'));
+        $this->assertSame([10, 20, 30], $arr->mode('salary')->all());
+    }
+
+    public function testingStatisticsOfAnEmptyArrIsNull(): void
+    {
+        $arr = new Arr();
+
+        $this->assertNull($arr->avg());
+        $this->assertNull($arr->min());
+        $this->assertNull($arr->max());
+        $this->assertNull($arr->median());
+        $this->assertNull($arr->percentile(50));
+        $this->assertTrue($arr->mode()->isEmpty());
+    }
+
+    public function testingPercentileOutOfRangeThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        (new Arr([1, 2]))->percentile(120);
+    }
+
+    public function testingCountBy(): void
+    {
+        $this->assertSame(['a' => 2, 'b' => 1], (new Arr(['a', 'b', 'a']))->countBy()->all());
+        $this->assertSame([1 => 2, 0 => 1], (new Arr([1, 2, 3]))->countBy(fn($i) => $i % 2)->all());
+        $this->assertSame(['odd' => 2, 'even' => 1], (new Arr([1, 2, 3]))->countBy(fn($i) => $i % 2 ? 'odd' : 'even')->all());
+    }
 }

@@ -76,8 +76,12 @@ $config->set('db.port', 3306)->all();    // new Arr with the extra key
 | Transform | `add`, `merge`, `slice`, `map`, `filter`, `where`, `reduce`, `column`, `pluck`, `groupBy`, `combine`, `diff`, `flip`, `unique`, `reverse`, `flatten`, `pad`, `chunk` |
 | Sort | `sort(SortOrder)`, `whereSort` |
 | Keys | `keys`, `values`, `keyExists`, `has`, `get`, `set`, `except` |
-| Inspect | `contains`, `isEmpty`, `isNotEmpty`, `first`, `last`, `sum`, `rand`, `count` |
+| Inspect | `contains`, `isEmpty`, `isNotEmpty`, `first`, `last`, `rand`, `count` |
+| Statistics | `sum`, `avg`, `min`, `max`, `median`, `mode`, `percentile`, `countBy` |
 | Convert | `all`, `toJson`, `lazy` |
+
+Statistics accept an optional column key (`$users->avg('salary')`) and return `null` when the array is empty
+(`mode()` returns an empty `Arr`).
 
 `SortOrder` is an enum: `SortOrder::Asc`, `SortOrder::Desc`, `SortOrder::Natural`.
 
@@ -103,6 +107,50 @@ $arr  = $lazy->toArr();                   // back to an Arr
 ```
 
 Methods: `from`, `range`, `map`, `filter`, `take`, `skip`, `chunk`, `values`, `reduce`, `first`, `each`, `all`, `toArr`.
+
+## Math: `Math` and `Num`
+
+`Math` is a set of typed static helpers. It replaces the standalone
+[`fghazaleh/math`](https://github.com/fghazaleh/math) package, and domain errors
+(empty input, division by zero, negative square root, ...) throw
+`InvalidArgumentException` instead of returning `NAN`/`INF`.
+
+```php
+use FG\Support\Math\Math;
+
+Math::max(3, 9, 4);              // 9
+Math::avg(1, 2, 3, 4);           // 2.5
+Math::median(4, 1, 2, 3);        // 2.5
+Math::mode(3, 1, 3, 1, 2);       // [1, 3]
+Math::percentile([15, 20, 35, 40, 50], 40); // 29.0
+Math::clamp(15, 0, 10);          // 10
+Math::percentage(1, 4);          // 25.0
+Math::log(8, 2);                 // 3.0
+```
+
+Methods: `pi`, `abs`, `ceil` / `roundUp`, `floor` / `roundDown`, `round`, `log`, `log10`, `log2`,
+`pow`, `sqrt`, `max`, `min`, `sum`, `avg`, `median`, `mode`, `percentile`, `clamp`, `between`, `percentage`.
+
+`Num` is an immutable number value object:
+
+```php
+use FG\Support\Math\Num;
+
+Num::of(1234.5)->add(10)->mul(2)->round()->format(2);  // "2,489.00"
+Num::of(23)->toOrdinal();                              // "23rd"
+Num::of(1)->percentOf(4);                              // 25.0
+Num::of('12')->isEven();                               // true
+```
+
+Methods: `of`, `value`, `toInt`, `toFloat`, `add`, `sub`, `mul`, `div`, `mod`, `pow`, `sqrt`, `abs`, `round`, `ceil`, `floor`,
+`clamp`, `isBetween`, `percentOf`, `compare`, `equals`, `isZero`, `isPositive`, `isNegative`, `isEven`, `isOdd`, `isWhole`,
+`format`, `toOrdinal`.
+
+### Migrating from `fghazaleh/math`
+
+Replace `FGhazaleh\Math\Math` with `FG\Support\Math\Math`. `log()`, `max()`, `min()`, `pi()`, `abs()`,
+`ceil()`, `floor()`, `roundUp()` and `roundDown()` keep the same names. Parameters are now typed
+(`int|float`), `max()` and `min()` throw when called without arguments, and `log()` defaults to the natural logarithm.
 
 ## Upgrading to 3.0
 
