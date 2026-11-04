@@ -80,16 +80,11 @@ Naming follows the PHP function without its prefix, in camelCase, for example `a
 - **`Str::soundex`, `metaphone`, `rot13`, `md5`, `sha1`, `crc32`, `countChars`, `span`, `cspan`** are byte based by nature.
 - **`Math::baseConvert`** and the other base functions lose precision above `PHP_INT_MAX`, like PHP.
 
-## Upgrading from 3.x
+## What's next
 
-4.0 is a rewrite of the public API. Version 3 had instance-based `Arr`, `Str`, `Char`, `LazyArr`, `Num` and
-`Math`; they are gone, and `Arr`, `Str` and `Math` now mean the static wrappers above. The helpers that were not
-PHP functions (`snake`, `kebab`, `slug`, `pluck`, `groupBy`, dot-notation `get`/`set`, statistics, `Num`, ...)
-are removed from this release and will come back as fluent classes (`Text`, ...) in a follow-up release.
-
-Coming from the standalone [`fghazaleh/math`](https://github.com/fghazaleh/math) package: `log()`, `max()`, `min()`,
-`pi()`, `abs()`, `ceil()` and `floor()` keep their names; `roundUp()` / `roundDown()` are now `ceil()` / `floor()`;
-`log()` defaults to the natural logarithm; `max()`/`min()` throw when called without arguments.
+The static classes are the foundation. The next release adds fluent, chainable classes built on top of them:
+`Collection`, `Number`, `Text` and `Chars`. Helpers that are not PHP functions (for example `snake`, `kebab`,
+`slug`, `pluck`, `groupBy` and statistics) will live there.
 
 ## Development
 
