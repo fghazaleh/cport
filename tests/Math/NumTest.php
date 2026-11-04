@@ -141,4 +141,28 @@ class NumTest extends TestCase
         $this->assertSame('3.5', (string) Num::of(3.5));
         $this->assertSame('[1,2.5]', json_encode([Num::of(1), Num::of(2.5)]));
     }
+
+    public function testingReadableAliases(): void
+    {
+        $num = Num::of(10);
+
+        $this->assertSame(13, $num->plus(3)->value());
+        $this->assertSame(7, $num->minus(3)->value());
+        $this->assertSame(30, $num->multiply(3)->value());
+        $this->assertSame(2.5, $num->divide(4)->value());
+        $this->assertSame(1, $num->modulo(3)->value());
+        $this->assertSame(6, Num::of(1)->plus(2)->multiply(4)->minus(6)->value());
+    }
+
+    public function testingAliasesShareTheSameErrors(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Num::of(1)->divide(0);
+    }
+
+    public function testingModuloAliasByZeroThrows(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Num::of(1)->modulo(0);
+    }
 }

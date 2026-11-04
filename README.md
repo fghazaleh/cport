@@ -146,6 +146,13 @@ Methods: `of`, `value`, `toInt`, `toFloat`, `add`, `sub`, `mul`, `div`, `mod`, `
 `clamp`, `isBetween`, `percentOf`, `compare`, `equals`, `isZero`, `isPositive`, `isNegative`, `isEven`, `isOdd`, `isWhole`,
 `format`, `toOrdinal`.
 
+The arithmetic methods also have readable aliases: `plus` (`add`), `minus` (`sub`), `multiply` (`mul`),
+`divide` (`div`) and `modulo` (`mod`).
+
+```php
+Num::of(10)->plus(5)->multiply(2)->minus(1)->value();  // 29
+```
+
 ### Migrating from `fghazaleh/math`
 
 Replace `FGhazaleh\Math\Math` with `FG\Support\Math\Math`. `log()`, `max()`, `min()`, `pi()`, `abs()`,

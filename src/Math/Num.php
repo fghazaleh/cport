@@ -51,14 +51,38 @@ final readonly class Num implements \Stringable, \JsonSerializable
         return new self($this->value + self::raw($other));
     }
 
+    /**
+     * Alias of add().
+     */
+    public function plus(int|float|self $other): self
+    {
+        return $this->add($other);
+    }
+
     public function sub(int|float|self $other): self
     {
         return new self($this->value - self::raw($other));
     }
 
+    /**
+     * Alias of sub().
+     */
+    public function minus(int|float|self $other): self
+    {
+        return $this->sub($other);
+    }
+
     public function mul(int|float|self $other): self
     {
         return new self($this->value * self::raw($other));
+    }
+
+    /**
+     * Alias of mul().
+     */
+    public function multiply(int|float|self $other): self
+    {
+        return $this->mul($other);
     }
 
     /**
@@ -75,6 +99,14 @@ final readonly class Num implements \Stringable, \JsonSerializable
     }
 
     /**
+     * Alias of div().
+     */
+    public function divide(int|float|self $other): self
+    {
+        return $this->div($other);
+    }
+
+    /**
      * @throws InvalidArgumentException when the divisor is zero
      */
     public function mod(int|float|self $other): self
@@ -87,6 +119,14 @@ final readonly class Num implements \Stringable, \JsonSerializable
         return new self(
             \is_int($this->value) && \is_int($divisor) ? $this->value % $divisor : fmod($this->value, $divisor),
         );
+    }
+
+    /**
+     * Alias of mod().
+     */
+    public function modulo(int|float|self $other): self
+    {
+        return $this->mod($other);
     }
 
     public function pow(int|float|self $exponent): self
