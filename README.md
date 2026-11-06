@@ -80,7 +80,7 @@ Naming follows the PHP function without its prefix, in camelCase, for example `a
 - **`Str::soundex`, `metaphone`, `rot13`, `md5`, `sha1`, `crc32`, `countChars`, `span`, `cspan`** are byte based by nature.
 - **`Math::baseConvert`** and the other base functions lose precision above `PHP_INT_MAX`, like PHP.
 
-## Fluent classes: `Collection`, `Text`, `Number`
+## Fluent classes: `Collection`, `Text`, `Number`, `Chars`, `LazyCollection`
 
 Chainable, **immutable** value objects built on the static classes. They only add what PHP has no function for
 (`snake`, `slug`, `pluck`, `groupBy`, statistics, ...) plus a small set of chain basics; for everything else use
@@ -114,8 +114,8 @@ Rules:
 - **A fluent class returns its own type or a plain PHP value.** `Text::explode()` returns an `array`,
   `Collection::average()` returns `?float`, `Collection::implode()` returns a `string`. No fluent class depends on another
   one (a test enforces it); to keep chaining across classes, wrap the value: `Collection::of($text->explode(','))`.
-- **They connect through PHP interfaces:** `Collection::of()` accepts any `iterable`, `Text::of()` and `Number::of()` accept any
-  `Stringable`.
+- **They connect through PHP interfaces:** `Collection::of()` and `LazyCollection::of()` accept any `iterable`, `Text::of()`, `Number::of()` and
+  `Chars::of()` accept any `Stringable`.
 - **Callbacks receive the value only.** Methods that take a key accept a dot-notation key (`'user.address.city'`) or a `Closure`.
 - **Full method names**, no aliases: `plus`, `minus`, `multiply`, `divide`, `modulo`, `power`, `squareRoot`.
 
@@ -125,7 +125,40 @@ Rules:
 | `Text` | `of`, `toString`, `length`, `isEmpty`, `isNotEmpty`, `equals`, `upper`, `lower`, `ucfirst`, `lcfirst`, `title`, `camel`, `studly`, `snake`, `kebab`, `slug`, `trim`, `ltrim`, `rtrim`, `pad`, `append`, `prepend`, `repeat`, `reverse`, `replace`, `remove`, `substr`, `limit`, `before`, `after`, `beforeLast`, `between`, `contains`, `startsWith`, `endsWith`, `wordCount`, `explode`, `words` |
 | `Number` | `of`, `value`, `toInt`, `toFloat`, `plus`, `minus`, `multiply`, `divide`, `modulo`, `power`, `squareRoot`, `abs`, `round`, `ceil`, `floor`, `clamp`, `compare`, `equals`, `isBetween`, `isEven`, `isOdd`, `isWhole`, `percentOf`, `format`, `toOrdinal` |
 
-More fluent classes and methods will be added in later releases.
+| `Chars` | `of`, `fromCodes`, `count`, `isEmpty`, `at`, `first`, `last`, `contains`, `toArray`, `codes`, `frequency`, `filter`, `reject`, `map`, `reverse`, `unique`, `sort`, `take`, `skip`, `letters`, `digits`, `spaces`, `uppercase`, `lowercase`, `punctuation`, `toString` |
+| `LazyCollection` | `of`, `range`, `map`, `filter`, `reject`, `take`, `skip`, `chunk`, `values`, `reduce`, `first`, `isEmpty`, `count`, `all` |
+
+### `LazyCollection`: generator pipelines
+
+Nothing runs until you consume the result, so it works on large or infinite sources:
+
+```php
+use FG\Support\LazyCollection;
+
+LazyCollection::range(1, PHP_INT_MAX)
+    ->filter(fn ($n) => $n % 2 === 0)
+    ->map(fn ($n) => $n ** 2)
+    ->take(3)
+    ->values()
+    ->all();                                  // [4, 16, 36]
+
+LazyCollection::of($lines)->chunk(100);       // yields arrays of 100 lines, one at a time
+```
+
+A `Closure` source can be iterated more than once; a bare generator can only be consumed once.
+
+### `Chars`: the characters of a string
+
+Works on characters (code points), not bytes:
+
+```php
+use FG\Support\Chars;
+
+Chars::of('Héllo, Wörld 42')->letters()->unique()->sort()->toString();  // 'HWdloréö'
+Chars::of('héllo')->codes();                                           // [104, 233, 108, 108, 111]
+Chars::of('abca')->frequency();                                        // ['a' => 2, 'b' => 1, 'c' => 1]
+Chars::fromCodes([72, 233])->toString();                               // 'Hé'
+```
 
 ## Development
 
