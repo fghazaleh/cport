@@ -80,11 +80,52 @@ Naming follows the PHP function without its prefix, in camelCase, for example `a
 - **`Str::soundex`, `metaphone`, `rot13`, `md5`, `sha1`, `crc32`, `countChars`, `span`, `cspan`** are byte based by nature.
 - **`Math::baseConvert`** and the other base functions lose precision above `PHP_INT_MAX`, like PHP.
 
-## What's next
+## Fluent classes: `Collection`, `Text`, `Number`
 
-The static classes are the foundation. The next release adds fluent, chainable classes built on top of them:
-`Collection`, `Number`, `Text` and `Chars`. Helpers that are not PHP functions (for example `snake`, `kebab`,
-`slug`, `pluck`, `groupBy` and statistics) will live there.
+Chainable, **immutable** value objects built on the static classes. They only add what PHP has no function for
+(`snake`, `slug`, `pluck`, `groupBy`, statistics, ...) plus a small set of chain basics; for everything else use
+`Arr`, `Str` and `Math` directly.
+
+```php
+use FG\Support\Collection;
+use FG\Support\Number;
+use FG\Support\Text;
+
+Collection::of($employees)
+    ->filter(fn ($e) => $e['active'])
+    ->sortBy('salary', descending: true)
+    ->pluck('name')
+    ->all();
+
+Collection::of($orders)->groupBy('customer.id');       // ['c1' => [...], 'c2' => [...]]
+Collection::of($orders)->average('total');             // 42.5, or null when empty
+
+Text::of('Héllo Wörld')->slug()->toString();           // 'héllo-wörld'
+Text::of('fooBar baz')->snake()->toString();           // 'foo_bar_baz'
+Text::of('  some text ')->trim()->limit(4)->upper();   // Text('SOME...')
+
+Number::of('19.99')->multiply(3)->round(1)->format(2); // '60.00'
+Number::of(23)->toOrdinal();                           // '23rd'
+Number::of(1)->percentOf(4)->value();                  // 25.0
+```
+
+Rules:
+
+- **A fluent class returns its own type or a plain PHP value.** `Text::explode()` returns an `array`,
+  `Collection::average()` returns `?float`, `Collection::implode()` returns a `string`. No fluent class depends on another
+  one (a test enforces it); to keep chaining across classes, wrap the value: `Collection::of($text->explode(','))`.
+- **They connect through PHP interfaces:** `Collection::of()` accepts any `iterable`, `Text::of()` and `Number::of()` accept any
+  `Stringable`.
+- **Callbacks receive the value only.** Methods that take a key accept a dot-notation key (`'user.address.city'`) or a `Closure`.
+- **Full method names**, no aliases: `plus`, `minus`, `multiply`, `divide`, `modulo`, `power`, `squareRoot`.
+
+| Class | Methods |
+| --- | --- |
+| `Collection` | `of`, `fromJson`, `all`, `count`, `isEmpty`, `isNotEmpty`, `first`, `last`, `get`, `has`, `contains`, `keys`, `values`, `map`, `filter`, `reject`, `reduce`, `merge`, `unique`, `sort`, `sortBy`, `pluck`, `groupBy`, `flatten`, `implode`, `sum`, `average`, `min`, `max`, `median`, `toJson` |
+| `Text` | `of`, `toString`, `length`, `isEmpty`, `isNotEmpty`, `equals`, `upper`, `lower`, `ucfirst`, `lcfirst`, `title`, `camel`, `studly`, `snake`, `kebab`, `slug`, `trim`, `ltrim`, `rtrim`, `pad`, `append`, `prepend`, `repeat`, `reverse`, `replace`, `remove`, `substr`, `limit`, `before`, `after`, `beforeLast`, `between`, `contains`, `startsWith`, `endsWith`, `wordCount`, `explode`, `words` |
+| `Number` | `of`, `value`, `toInt`, `toFloat`, `plus`, `minus`, `multiply`, `divide`, `modulo`, `power`, `squareRoot`, `abs`, `round`, `ceil`, `floor`, `clamp`, `compare`, `equals`, `isBetween`, `isEven`, `isOdd`, `isWhole`, `percentOf`, `format`, `toOrdinal` |
+
+More fluent classes and methods will be added in later releases.
 
 ## Development
 
