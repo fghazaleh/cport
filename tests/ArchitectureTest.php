@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ArchitectureTest extends TestCase
 {
-    private const FLUENT = ['Collection', 'Text', 'Number'];
+    private const FLUENT = ['Collection', 'Text', 'Number', 'Chars', 'LazyCollection'];
 
     /**
      * @return array<string, array{string}>
