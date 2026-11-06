@@ -1,118 +1,90 @@
 # cport
 
-cport is a PHP support library wrapping Array and String PHP functions.
+cport wraps PHP's array, string and math functions in three static classes with **one consistent API**:
+`Arr`, `Str` and `Math`. Nobody remembers whether it is `array_map($fn, $array)` or
+`array_filter($array, $fn)`, whether `strpos` returns `false` or `0`, or what `sqrt(-1)` gives you.
+With cport you type `Arr::`, `Str::` or `Math::`, let your IDE complete the name, and the arguments always
+come in the same order.
 
 [![CI](https://github.com/fghazaleh/cport/actions/workflows/ci.yml/badge.svg)](https://github.com/fghazaleh/cport/actions/workflows/ci.yml)
-
-## Requirements
-
-- PHP 8.5 or newer
-- `ext-mbstring`, `ext-json`
 
 ```bash
 composer require fghazaleh/cport
 ```
 
-## Strings: `Str`
+Requires PHP 8.5+ and `ext-mbstring`.
 
-`Str` is **immutable** and **multibyte (UTF-8) safe**: every method returns a new instance.
+## Rules every method follows
 
-```php
-use FG\Support\Strings\Str;
-
-$str = new Str('Héllo Wörld');
-// or
-$str = Str::fromString('Héllo Wörld');
-
-$str->length();              // 11
-$str->toUpper();             // "HÉLLO WÖRLD"
-$str->slug();                // "héllo-wörld"
-$str->snake();               // "héllo_wörld"
-```
-
-| Group | Methods |
+| Rule | Example |
 | --- | --- |
-| Trim | `trim`, `rtrim`, `ltrim` |
-| Case | `toUpper`, `toLower`, `toUpperFirst`, `toLowerFirst`, `title`, `camel`, `studly`, `snake`, `kebab`, `slug` |
-| Inspect | `length`, `isEmpty`, `isNotEmpty`, `wordCount`, `contains`, `any` (case-insensitive), `startsWith`, `endsWith`, `indexOf`, `lastIndexOf`, `charAt`, `charCodeAt` |
-| Transform | `replace`, `subString`, `appendAfter`, `appendBefore`, `stripTags`, `reverse`, `pad`, `repeat`, `limit` |
-| Slice | `before`, `after`, `between`, `beforeLast` |
-| Convert | `explode` (returns `Arr`), `parseQueryString` (returns `Arr`), `toMd5`, `toString` |
-
-A `Str` is iterable and yields `Char` objects (characters, not bytes).
-
-## Arrays: `Arr`
-
-`Arr` is **immutable**: every method returns a new instance and the original is never changed.
-It is `Countable`, `IteratorAggregate`, `JsonSerializable` and read-only `ArrayAccess`
-(assigning or unsetting an offset throws `ImmutableException`).
+| **Subject first**, always | `Arr::map($array, $fn)`, `Arr::filter($array, $fn)`, `Str::replace($subject, $search, $replace)`, `Str::contains($haystack, $needle)` |
+| **No `array_` / `str` prefixes** | `Arr::chunk()`, `Arr::unique()`, `Str::pad()`, `Str::repeat()` |
+| **Nothing is changed in place.** By-reference functions return the new value | `$sorted = Arr::sort($array)`, `$rest = Arr::pop($array)`, `Arr::push($array, 4)` |
+| **`null` instead of `false`** when nothing was found | `Arr::search()`, `Str::pos()`, `Str::str()` |
+| **Throws instead of `NAN`, `INF` or a warning** | `Math::sqrt(-1)`, `Math::log(0)`, `Str::hexToBin('zz')` |
+| **UTF-8 by default** for strings | `Str::length('héllo') === 5`, `Str::upper('é') === 'É'` |
+| **Pure functions**, no state, no objects | all classes are `final` with a private constructor |
 
 ```php
-use FG\Support\Arrays\Arr;
-use FG\Support\Arrays\SortOrder;
+use FG\Support\Arr;
+use FG\Support\Math;
+use FG\Support\Str;
 
-$arr = new Arr([3, 1, 2]);
-// or
-$arr = Arr::createFrom([3, 1, 2]);
+Arr::map([1, 2, 3], fn ($n) => $n * 2);          // [2, 4, 6]
+Arr::filter([1, 2, 3, 4], fn ($n) => $n > 2);    // [2 => 3, 3 => 4]
+Arr::reduce([1, 2, 3], fn ($c, $n) => $c + $n, 0); // 6
+Arr::sort([3, 1, 2]);                            // [1, 2, 3] (the argument is untouched)
+Arr::search(['a', 'b'], 'z');                    // null, not false
+Arr::first([]);                                  // null
+Arr::find([1, 2, 3], fn ($n) => $n > 1);         // 2
 
-$sorted = $arr->sort(SortOrder::Desc);   // [3, 2, 1]; $arr is unchanged
+Str::length('héllo');                            // 5
+Str::pos('héllo wörld', 'w');                    // 6
+Str::substr('héllo', 1, 3);                      // 'éll'
+Str::pad('é', 5, '-', STR_PAD_BOTH);             // '--é--'
+Str::wordwrap('The quick brown fox', 10, "\n", true);
+Str::levenshtein('kitten', 'sitting');           // 3
+Str::compare('a', 'b');                          // -1 (always -1, 0 or 1)
 
-$users = Arr::createFrom([
-    ['id' => 1, 'name' => 'Ann', 'team' => 'a'],
-    ['id' => 2, 'name' => 'Bob', 'team' => 'b'],
-]);
-
-$users->pluck('name', 'id')->all();      // [1 => 'Ann', 2 => 'Bob']
-$users->groupBy('team')->keys()->all();  // ['a', 'b']
-
-$config = Arr::createFrom(['db' => ['host' => 'localhost']]);
-$config->get('db.host');                 // 'localhost'
-$config->set('db.port', 3306)->all();    // new Arr with the extra key
+Math::round(2.5);                                // 3.0
+Math::max(3, 9, 4);                              // 9
+Math::sqrt(-1);                                  // throws InvalidArgumentException
+Math::baseConvert('ff', 16, 2);                  // '11111111'
+Math::decToHex(255);                             // 'ff'
 ```
 
-| Group | Methods |
-| --- | --- |
-| Create | `createFrom`, `fill`, `fromJson` |
-| Transform | `add`, `merge`, `slice`, `map`, `filter`, `where`, `reduce`, `column`, `pluck`, `groupBy`, `combine`, `diff`, `flip`, `unique`, `reverse`, `flatten`, `pad`, `chunk` |
-| Sort | `sort(SortOrder)`, `whereSort` |
-| Keys | `keys`, `values`, `keyExists`, `has`, `get`, `set`, `except` |
-| Inspect | `contains`, `isEmpty`, `isNotEmpty`, `first`, `last`, `sum`, `rand`, `count` |
-| Convert | `all`, `toJson`, `lazy` |
+## What is wrapped
 
-`SortOrder` is an enum: `SortOrder::Asc`, `SortOrder::Desc`, `SortOrder::Natural`.
+The complete list, with the PHP function behind every method and the functions that are deliberately **not**
+wrapped (and why), is in [docs/FUNCTIONS.md](docs/FUNCTIONS.md).
 
-Invalid input throws `FG\Support\Exceptions\InvalidArgumentException`
-(for example `combine()` with arrays of different lengths, or `chunk(0)`).
+| Class | Methods | Covers |
+| --- | --- | --- |
+| `Arr` | 76 | `array_*`, the sort family, `range`, `count`, `in_array`, `implode`, `iterator_to_array`, plus `find`, `findKey`, `any`, `all`, `first`, `last` (PHP 8.4/8.5 functions that work on every version) |
+| `Str` | 88 | `str*`, `substr*`, `mb_*`, `trim` family, `html*`, `*slashes`, `sprintf` family, `levenshtein`, `similar_text`, `wordwrap`, hashes |
+| `Math` | 48 | `abs`, `round`, `log*`, `pow`, `sqrt`, trigonometry, base conversion, `number_format`, `mt_rand`, `random_int` |
 
-### Lazy arrays: `LazyArr`
+Naming follows the PHP function without its prefix, in camelCase, for example `array_key_first` →
+`Arr::keyFirst()`, `str_word_count` → `Str::wordCount()`, `bindec` → `Math::binToDec()`. A few readability renames:
+`in_array` → `Arr::contains()`, `strstr` → `Str::str()`, `substr_replace` → `Str::replaceSubstr()`,
+`rad2deg` → `Math::radToDeg()`.
 
-`LazyArr` is a generator pipeline: nothing runs until you consume the result, so it works on large or infinite sources.
+### Differences from PHP worth knowing
 
-```php
-use FG\Support\Arrays\LazyArr;
+- **Comparisons** (`Str::compare*`) always return `-1`, `0` or `1`.
+- **User-callback set functions** (`udiff`, `uintersect`, `diffUassoc`, ...) take exactly one other array.
+- **`Arr::pop`, `shift`, `splice`** return the remaining array. Read the removed element first with `Arr::last()`,
+  `Arr::first()` or `Arr::slice()`.
+- **`Str::trim` family** supports `..` ranges only for ASCII characters.
+- **`Str::soundex`, `metaphone`, `rot13`, `md5`, `sha1`, `crc32`, `countChars`, `span`, `cspan`** are byte based by nature.
+- **`Math::baseConvert`** and the other base functions lose precision above `PHP_INT_MAX`, like PHP.
 
-$firstEvenSquares = LazyArr::range(1, PHP_INT_MAX)
-    ->filter(fn ($n) => $n % 2 === 0)
-    ->map(fn ($n) => $n ** 2)
-    ->take(3)
-    ->values()
-    ->all();                              // [4, 16, 36]
+## What's next
 
-$lazy = (new Arr($rows))->lazy();         // from an Arr
-$arr  = $lazy->toArr();                   // back to an Arr
-```
-
-Methods: `from`, `range`, `map`, `filter`, `take`, `skip`, `chunk`, `values`, `reduce`, `first`, `each`, `all`, `toArr`.
-
-## Upgrading to 3.0
-
-- Requires PHP 8.5+.
-- `Arr` is now immutable. `add`, `map`, `sort` and `whereSort` used to change the object in place; use the returned value instead. `ArrayAccess` writes throw `ImmutableException`.
-- `Arr::SORT_ASC` / `SORT_DESC` / `SORT_NAT` were replaced by the `SortOrder` enum.
-- `Arr::first()` / `last()` no longer require a callback and accept a default value.
-- `Arr::combine()`, `chunk()` and `rand()` throw `InvalidArgumentException` on invalid input.
-- `Str` now uses `mb_*` functions, so `length()`, `subString()`, `indexOf()`, `reverse()`, `pad()` etc. count characters instead of bytes. `Char::code()` returns the Unicode code point.
-- `Str::parseQueryString()` always returns an `Arr`.
+The static classes are the foundation. The next release adds fluent, chainable classes built on top of them:
+`Collection`, `Number`, `Text` and `Chars`. Helpers that are not PHP functions (for example `snake`, `kebab`,
+`slug`, `pluck`, `groupBy` and statistics) will live there.
 
 ## Development
 
@@ -123,3 +95,6 @@ composer cs        # check code style (PHP-CS-Fixer, dry run)
 composer cs:fix    # fix code style
 composer check     # both
 ```
+
+Each wrapper has at least one test that compares it with the native PHP function (where behaviour is identical)
+or with an explicit expected value (where it intentionally differs).

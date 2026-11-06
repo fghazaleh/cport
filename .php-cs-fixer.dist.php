@@ -12,7 +12,6 @@ return (new PhpCsFixer\Config())
         '@PER-CS' => true,
         '@PHP83Migration' => true,
         'declare_strict_types' => true,
-        'strict_param' => true,
         'array_syntax' => ['syntax' => 'short'],
         'no_unused_imports' => true,
         'ordered_imports' => ['sort_algorithm' => 'alpha'],

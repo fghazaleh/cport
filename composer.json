@@ -1,10 +1,9 @@
 {
   "name": "fghazaleh/cport",
-  "description": "PHP support library for Array and String PHP function",
+  "description": "Static, consistent wrappers for PHP's array, string and math functions",
   "type": "library",
   "require": {
     "php": ">=8.5",
-    "ext-json": "*",
     "ext-mbstring": "*"
   },
   "require-dev": {
@@ -34,5 +33,10 @@
   },
   "config": {
     "sort-packages": true
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "FG\\Support\\": "tests/"
+    }
   }
 }
